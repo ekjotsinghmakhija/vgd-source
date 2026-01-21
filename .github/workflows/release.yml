@@ -43,8 +43,7 @@ jobs:
       - name: Build Wheel
         run: uv build
 
-      # 4. Publish to PRIVATE Repo (vgd-source)
-      # This runs in the current repo context, so it automatically picks up vgd-source
+      # 4. Publish to PRIVATE Repo (Backup)
       - name: Publish to Private Repo
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -52,14 +51,35 @@ jobs:
           files: dist/*
           generate_release_notes: true
 
-      # 5. Publish to PUBLIC Repo (vgd-dist)
+      # 5. Prepare Public Repo (Critical Fix for 422 Error)
+      # We must create a commit on the public repo so we have something to tag.
+      - name: Prepare Public Repo
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          # Configure git
+          git config --global user.email "ekjotmakhija@gmail.com"
+          git config --global user.name "Ekjot Singh"
+
+          # Clone public repo using the TOKEN
+          git clone https://x-access-token:${{ secrets.PUBLIC_REPO_TOKEN }}@github.com/ekjotsinghmakhija/vgd-dist.git public_dist
+          cd public_dist
+
+          # Create/Update version file to ensure we have a new commit
+          echo "${{ github.ref_name }}" > version.txt
+
+          # Commit and Push to Public Repo
+          git add version.txt
+          git commit -m "Release ${{ github.ref_name }}" || echo "No changes to commit"
+          git push origin main
+
+      # 6. Publish to PUBLIC Repo
       - name: Publish to Public Repo
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          # TOKEN is required to write to a different repo
           token: ${{ secrets.PUBLIC_REPO_TOKEN }}
-          # UPDATED: Points to your specific public distribution repo
           repository: ekjotsinghmakhija/vgd-dist
           files: dist/*
           generate_release_notes: true
+          # CRITICAL: Target the 'main' branch of the public repo, NOT the private commit SHA
+          target_commitish: main

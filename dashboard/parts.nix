@@ -37,7 +37,7 @@
     in
     {
       # Extract just the static site from the full build
-      packages.dashboard = pkgs.runCommand "exo-dashboard" { } ''
+      packages.dashboard = pkgs.runCommand "vgd-dashboard" { } ''
         cp -r ${dashboardFull}/build $out
       '';
     };

@@ -1,6 +1,6 @@
-# EXO Architecture overview
+# VGD Architecture overview
 
-EXO uses an _Event Sourcing_ architecture, and Erlang-style _message passing_. To facilitate this, we've written a channel library extending anyio channels with inspiration from tokio::sync::mpsc. 
+VGD uses an _Event Sourcing_ architecture, and Erlang-style _message passing_. To facilitate this, we've written a channel library extending anyio channels with inspiration from tokio::sync::mpsc. 
 
 Each logical module - designed to be functional independently of the others - communicates with the rest of the system by sending messages on topics.
 

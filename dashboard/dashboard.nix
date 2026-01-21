@@ -29,7 +29,7 @@ in
     dream2nix.modules.dream2nix.nodejs-granular-v3
   ];
 
-  name = "exo-dashboard";
+  name = "vgd-dashboard";
   version = "1.0.0";
 
   mkDerivation = {

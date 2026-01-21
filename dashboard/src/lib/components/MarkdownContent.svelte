@@ -461,14 +461,14 @@
 		font-size: 1.5rem;
 		font-weight: 700;
 		margin: 1.5rem 0 0.75rem 0;
-		color: var(--exo-yellow, #ffd700);
+		color: var(--vgd-yellow, #ffd700);
 	}
 
 	.markdown-content :global(h2) {
 		font-size: 1.25rem;
 		font-weight: 600;
 		margin: 1.25rem 0 0.5rem 0;
-		color: var(--exo-yellow, #ffd700);
+		color: var(--vgd-yellow, #ffd700);
 	}
 
 	.markdown-content :global(h3) {
@@ -497,7 +497,7 @@
 	/* Inline code */
 	.markdown-content :global(.inline-code) {
 		background: rgba(255, 215, 0, 0.1);
-		color: var(--exo-yellow, #ffd700);
+		color: var(--vgd-yellow, #ffd700);
 		padding: 0.125rem 0.375rem;
 		border-radius: 0.25rem;
 		font-family: ui-monospace, SFMono-Regular, 'SF Mono', Monaco, Consolas, monospace;
@@ -506,7 +506,7 @@
 
 	/* Links */
 	.markdown-content :global(a) {
-		color: var(--exo-yellow, #ffd700);
+		color: var(--vgd-yellow, #ffd700);
 		text-decoration: underline;
 		text-underline-offset: 2px;
 	}
@@ -533,12 +533,12 @@
 	}
 
 	.markdown-content :global(li::marker) {
-		color: var(--exo-light-gray, #9ca3af);
+		color: var(--vgd-light-gray, #9ca3af);
 	}
 
 	/* Blockquotes */
 	.markdown-content :global(blockquote) {
-		border-left: 3px solid var(--exo-yellow, #ffd700);
+		border-left: 3px solid var(--vgd-yellow, #ffd700);
 		padding: 0.5rem 1rem;
 		margin: 1rem 0;
 		background: rgba(255, 215, 0, 0.05);
@@ -592,7 +592,7 @@
 	}
 
 	.markdown-content :global(.code-language) {
-		color: var(--exo-yellow, #ffd700);
+		color: var(--vgd-yellow, #ffd700);
 		font-size: 0.7rem;
 		font-weight: 500;
 		text-transform: uppercase;
@@ -607,14 +607,14 @@
 		padding: 0.25rem;
 		background: transparent;
 		border: none;
-		color: var(--exo-light-gray, #9ca3af);
+		color: var(--vgd-light-gray, #9ca3af);
 		cursor: pointer;
 		transition: color 0.2s;
 		border-radius: 0.25rem;
 	}
 
 	.markdown-content :global(.copy-code-btn:hover) {
-		color: var(--exo-yellow, #ffd700);
+		color: var(--vgd-yellow, #ffd700);
 	}
 
 	.markdown-content :global(.copy-code-btn.copied) {
@@ -635,7 +635,7 @@
 		background: transparent;
 	}
 
-	/* Syntax highlighting - dark theme matching EXO style */
+	/* Syntax highlighting - dark theme matching VGD style */
 	.markdown-content :global(.hljs) {
 		color: #e5e7eb;
 	}
@@ -743,7 +743,7 @@
 		padding: 0.25rem;
 		background: transparent;
 		border: none;
-		color: var(--exo-light-gray, #9ca3af);
+		color: var(--vgd-light-gray, #9ca3af);
 		cursor: pointer;
 		transition: color 0.2s;
 		border-radius: 0.25rem;
@@ -758,7 +758,7 @@
 	}
 
 	.markdown-content :global(.copy-math-btn:hover) {
-		color: var(--exo-yellow, #ffd700);
+		color: var(--vgd-yellow, #ffd700);
 	}
 
 	.markdown-content :global(.copy-math-btn.copied) {
@@ -924,7 +924,7 @@
 
 	.markdown-content :global(.latex-theorem-header) {
 		font-weight: 700;
-		color: var(--exo-yellow, #ffd700);
+		color: var(--vgd-yellow, #ffd700);
 		margin-bottom: 0.5rem;
 	}
 

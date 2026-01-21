@@ -1,7 +1,7 @@
 [project]
-name = "exo"
+name = "vgd"
 version = "0.3.0"
-description = "Exo"
+description = "Vgd"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -15,7 +15,7 @@ dependencies = [
     "huggingface-hub>=0.33.4",
     "psutil>=7.0.0",
     "loguru>=0.7.3",
-    "exo_pyo3_bindings", # rust bindings
+    "vgd_pyo3_bindings", # rust bindings
     "anyio==4.11.0",
     "mlx==0.30.3; sys_platform == 'darwin'",
     "mlx[cpu]==0.30.3; sys_platform == 'linux'",
@@ -27,9 +27,9 @@ dependencies = [
 ]
 
 [project.scripts]
-exo-master = "exo.master.main:main"
-exo-worker = "exo.worker.main:main"
-exo = "exo.main:main"
+vgd-master = "vgd.master.main:main"
+vgd-worker = "vgd.worker.main:main"
+vgd = "vgd.main:main"
 
 # dependencies only required for development
 [dependency-groups]
@@ -54,11 +54,11 @@ dev = [
 
 [tool.uv.workspace]
 members = [
-    "rust/exo_pyo3_bindings",
+    "rust/vgd_pyo3_bindings",
 ]
 
 [tool.uv.sources]
-exo_pyo3_bindings = { workspace = true }
+vgd_pyo3_bindings = { workspace = true }
 # Uncomment to use local mlx/mlx-lm development versions:
 # mlx = { path = "/Users/Shared/mlx", editable=true }
 # mlx-lm = { path = "/Users/Shared/mlx-lm", editable=true }
@@ -88,7 +88,7 @@ reportUnnecessaryTypeIgnoreComment = "error"
 pythonVersion = "3.13"
 pythonPlatform = "Darwin"
 
-exclude = ["**/.venv", "**/venv", "**/__pycache__", "**/exo_scripts", "**/.direnv", "**/rust", "**/.github"]
+exclude = ["**/.venv", "**/venv", "**/__pycache__", "**/vgd_scripts", "**/.direnv", "**/rust", "**/.github"]
 stubPath = ".mlx_typings"
 
 [[tool.basedpyright.executionEnvironments]]
@@ -111,7 +111,7 @@ environments = [
 ###
 
 [tool.ruff]
-extend-exclude = ["shared/protobufs/**", "*mlx_typings/**", "rust/exo_pyo3_bindings/**"]
+extend-exclude = ["shared/protobufs/**", "*mlx_typings/**", "rust/vgd_pyo3_bindings/**"]
 
 [tool.ruff.lint]
 extend-select = ["I", "N", "B", "A", "PIE", "SIM"]
@@ -123,7 +123,7 @@ markers = [
     "slow: marks tests as slow (deselected by default)"
 ]
 env = [
-  "EXO_TESTS=1"
+  "VGD_TESTS=1"
 ]
 addopts = "-m 'not slow'"
 filterwarnings = [

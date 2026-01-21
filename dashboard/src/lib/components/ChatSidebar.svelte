@@ -219,12 +219,12 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 	}
 </script>
 
-<aside class="flex flex-col h-full bg-exo-dark-gray border-r border-exo-yellow/10 {className}">
+<aside class="flex flex-col h-full bg-vgd-dark-gray border-r border-vgd-yellow/10 {className}">
 	<!-- Header -->
 	<div class="p-4">
 		<button
 			onclick={handleNewChat}
-			class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-transparent border border-exo-yellow/30 text-exo-yellow text-xs font-mono tracking-wider uppercase hover:border-exo-yellow/50 transition-all cursor-pointer"
+			class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-transparent border border-vgd-yellow/30 text-vgd-yellow text-xs font-mono tracking-wider uppercase hover:border-vgd-yellow/50 transition-all cursor-pointer"
 		>
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -243,7 +243,7 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 				type="text"
 				bind:value={searchQuery}
 				placeholder="Search conversations..."
-				class="w-full bg-exo-black/40 border border-exo-medium-gray/30 rounded px-3 py-2 pl-9 text-xs text-white/90 placeholder:text-white/40 focus:outline-none focus:border-exo-yellow/30"
+				class="w-full bg-vgd-black/40 border border-vgd-medium-gray/30 rounded px-3 py-2 pl-9 text-xs text-white/90 placeholder:text-white/40 focus:outline-none focus:border-vgd-yellow/30"
 			/>
 		</div>
 	</div>
@@ -263,24 +263,24 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 					<div class="px-2">
 						{#if editingId === conversation.id}
 							<!-- Edit mode -->
-							<div class="p-2 bg-transparent border border-exo-yellow/20 rounded mb-1">
+							<div class="p-2 bg-transparent border border-vgd-yellow/20 rounded mb-1">
 								<input
 									type="text"
 									bind:value={editingName}
 									onkeydown={handleEditKeydown}
-									class="w-full bg-exo-black/60 border border-exo-yellow/30 rounded px-2 py-1.5 text-xs text-exo-light-gray focus:outline-none focus:border-exo-yellow/50 mb-2"
+									class="w-full bg-vgd-black/60 border border-vgd-yellow/30 rounded px-2 py-1.5 text-xs text-vgd-light-gray focus:outline-none focus:border-vgd-yellow/50 mb-2"
 									autofocus
 								/>
 								<div class="flex gap-2">
 									<button
 										onclick={handleSaveEdit}
-										class="flex-1 py-1.5 text-xs font-mono tracking-wider uppercase bg-transparent text-exo-yellow border border-exo-yellow/30 rounded hover:border-exo-yellow/50 cursor-pointer"
+										class="flex-1 py-1.5 text-xs font-mono tracking-wider uppercase bg-transparent text-vgd-yellow border border-vgd-yellow/30 rounded hover:border-vgd-yellow/50 cursor-pointer"
 									>
 										SAVE
 									</button>
 									<button
 										onclick={handleCancelEdit}
-										class="flex-1 py-1.5 text-xs font-mono tracking-wider uppercase bg-exo-medium-gray/20 text-exo-light-gray border border-exo-medium-gray/30 rounded hover:bg-exo-medium-gray/30 cursor-pointer"
+										class="flex-1 py-1.5 text-xs font-mono tracking-wider uppercase bg-vgd-medium-gray/20 text-vgd-light-gray border border-vgd-medium-gray/30 rounded hover:bg-vgd-medium-gray/30 cursor-pointer"
 									>
 										CANCEL
 									</button>
@@ -299,7 +299,7 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 									</button>
 									<button
 										onclick={handleCancelDelete}
-										class="flex-1 py-1.5 text-xs font-mono tracking-wider uppercase bg-exo-medium-gray/20 text-exo-light-gray border border-exo-medium-gray/30 rounded hover:bg-exo-medium-gray/30 cursor-pointer"
+										class="flex-1 py-1.5 text-xs font-mono tracking-wider uppercase bg-vgd-medium-gray/20 text-vgd-light-gray border border-vgd-medium-gray/30 rounded hover:bg-vgd-medium-gray/30 cursor-pointer"
 									>
 										CANCEL
 									</button>
@@ -315,11 +315,11 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 								onkeydown={(e) => e.key === 'Enter' && handleSelectConversation(conversation.id)}
 								class="group w-full flex items-center justify-between p-2 rounded mb-1 transition-all text-left cursor-pointer
 									{activeId === conversation.id 
-								? 'bg-transparent border border-exo-yellow/30' 
-									: 'hover:border-exo-yellow/20 border border-transparent'}"
+								? 'bg-transparent border border-vgd-yellow/30' 
+									: 'hover:border-vgd-yellow/20 border border-transparent'}"
 							>
 								<div class="flex-1 min-w-0 pr-2">
-									<div class="text-sm truncate {activeId === conversation.id ? 'text-exo-yellow' : 'text-white/90'}">
+									<div class="text-sm truncate {activeId === conversation.id ? 'text-vgd-yellow' : 'text-white/90'}">
 										{conversation.name}
 									</div>
 									<div class="text-sm text-white/50 mt-0.5">
@@ -342,7 +342,7 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 								<button
 									type="button"
 									onclick={(e) => handleStartEdit(conversation.id, conversation.name, e)}
-									class="p-1 text-exo-light-gray hover:text-exo-yellow transition-colors cursor-pointer"
+									class="p-1 text-vgd-light-gray hover:text-vgd-yellow transition-colors cursor-pointer"
 									title="Rename"
 								>
 										<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -352,7 +352,7 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 								<button
 									type="button"
 									onclick={(e) => handleDeleteClick(conversation.id, e)}
-									class="p-1 text-exo-light-gray hover:text-red-400 transition-colors cursor-pointer"
+									class="p-1 text-vgd-light-gray hover:text-red-400 transition-colors cursor-pointer"
 									title="Delete"
 								>
 										<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -367,8 +367,8 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 			</div>
 		{:else}
 			<div class="flex flex-col items-center justify-center h-full p-4 text-center">
-				<div class="w-12 h-12 border border-exo-yellow/20 rounded-full flex items-center justify-center mb-3">
-					<svg class="w-6 h-6 text-exo-yellow/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<div class="w-12 h-12 border border-vgd-yellow/20 rounded-full flex items-center justify-center mb-3">
+					<svg class="w-6 h-6 text-vgd-yellow/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
 					</svg>
 				</div>
@@ -383,7 +383,7 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 	</div>
 
 	<!-- Footer -->
-	<div class="p-3 border-t border-exo-yellow/10">
+	<div class="p-3 border-t border-vgd-yellow/10">
 		{#if showDeleteAllConfirm}
 			<div class="bg-red-500/10 border border-red-500/30 rounded p-2 mb-2">
 				<p class="text-xs text-red-400 text-center mb-2">Delete all {conversationList.length} conversations?</p>
@@ -396,7 +396,7 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 				</button>
 				<button
 					onclick={handleCancelDeleteAll}
-					class="flex-1 py-1.5 text-xs font-mono tracking-wider uppercase bg-exo-medium-gray/20 text-exo-light-gray border border-exo-medium-gray/30 rounded hover:bg-exo-medium-gray/30 transition-colors cursor-pointer"
+					class="flex-1 py-1.5 text-xs font-mono tracking-wider uppercase bg-vgd-medium-gray/20 text-vgd-light-gray border border-vgd-medium-gray/30 rounded hover:bg-vgd-medium-gray/30 transition-colors cursor-pointer"
 				>
 						CANCEL
 					</button>
@@ -417,10 +417,10 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 		<button
 			type="button"
 			onclick={toggleDebugMode}
-			class="p-1.5 rounded border border-exo-medium-gray/40 hover:border-exo-yellow/50 transition-colors cursor-pointer"
+			class="p-1.5 rounded border border-vgd-medium-gray/40 hover:border-vgd-yellow/50 transition-colors cursor-pointer"
 			title="Toggle debug mode"
 		>
-			<svg class="w-4 h-4 {debugEnabled ? 'text-exo-yellow' : 'text-exo-medium-gray'}" fill="currentColor" viewBox="0 0 24 24">
+			<svg class="w-4 h-4 {debugEnabled ? 'text-vgd-yellow' : 'text-vgd-medium-gray'}" fill="currentColor" viewBox="0 0 24 24">
 				<path d="M19 8h-1.81A6.002 6.002 0 0 0 12 2a6.002 6.002 0 0 0-5.19 3H5a1 1 0 0 0 0 2h1v2H5a1 1 0 0 0 0 2h1v2H5a1 1 0 0 0 0 2h1.81A6.002 6.002 0 0 0 12 22a6.002 6.002 0 0 0 5.19-3H19a1 1 0 0 0 0-2h-1v-2h1a1 1 0 0 0 0-2h-1v-2h1a1 1 0 1 0 0-2Zm-5 10.32V19a1 1 0 1 1-2 0v-.68a3.999 3.999 0 0 1-3-3.83V9.32a3.999 3.999 0 0 1 3-3.83V5a1 1 0 0 1 2 0v.49a3.999 3.999 0 0 1 3 3.83v5.17a3.999 3.999 0 0 1-3 3.83Z"/>
 			</svg>
 		</button>
@@ -430,10 +430,10 @@ const topologyOnlyEnabled = $derived(topologyOnlyMode());
 		<button
 			type="button"
 			onclick={toggleTopologyOnlyMode}
-			class="p-1.5 rounded border border-exo-medium-gray/40 hover:border-exo-yellow/50 transition-colors cursor-pointer"
+			class="p-1.5 rounded border border-vgd-medium-gray/40 hover:border-vgd-yellow/50 transition-colors cursor-pointer"
 			title="Toggle topology only mode"
 		>
-			<svg class="w-4 h-4 {topologyOnlyEnabled ? 'text-exo-yellow' : 'text-exo-medium-gray'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+			<svg class="w-4 h-4 {topologyOnlyEnabled ? 'text-vgd-yellow' : 'text-vgd-medium-gray'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 				<circle cx="12" cy="5" r="2" fill="currentColor" />
 				<circle cx="5" cy="19" r="2" fill="currentColor" />
 				<circle cx="19" cy="19" r="2" fill="currentColor" />

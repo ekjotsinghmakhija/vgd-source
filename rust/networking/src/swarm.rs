@@ -13,7 +13,7 @@ pub type Swarm = libp2p::Swarm<Behaviour>;
 ///       this be passed in as a parameter? What about rapidly changing versions in debug builds?
 ///       this is all VERY very hard to figure out and needs to be mulled over as a team.
 pub const NETWORK_VERSION: &[u8] = b"v0.0.1";
-pub const OVERRIDE_VERSION_ENV_VAR: &str = "EXO_LIBP2P_NAMESPACE";
+pub const OVERRIDE_VERSION_ENV_VAR: &str = "VGD_LIBP2P_NAMESPACE";
 
 /// Create and configure a swarm which listens to all ports on OS
 pub fn create_swarm(keypair: identity::Keypair) -> alias::AnyResult<Swarm> {
@@ -42,7 +42,7 @@ mod transport {
     /// Key used for networking's private network; parametrized on the [`NETWORK_VERSION`].
     /// See [`pnet_upgrade`] for more.
     static PNET_PRESHARED_KEY: LazyLock<[u8; 32]> = LazyLock::new(|| {
-        let builder = Sha3_256::new().update(b"exo_discovery_network");
+        let builder = Sha3_256::new().update(b"vgd_discovery_network");
 
         if let Ok(var) = env::var(OVERRIDE_VERSION_ENV_VAR) {
             let bytes = var.into_bytes();

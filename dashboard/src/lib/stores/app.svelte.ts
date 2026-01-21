@@ -1,9 +1,9 @@
 /**
- * AppStore - Central state management for the EXO dashboard
+ * AppStore - Central state management for the VGD dashboard
  *
  * Manages:
  * - Chat state (whether a conversation has started)
- * - Topology data from the EXO server
+ * - Topology data from the VGD server
  * - UI state for the topology/chat transition
  */
 
@@ -222,7 +222,7 @@ export interface Conversation {
 	instanceType: string | null;
 }
 
-const STORAGE_KEY = "exo-conversations";
+const STORAGE_KEY = "vgd-conversations";
 
 interface GranularNodeState {
 	nodeIdentities?: Record<string, RawNodeIdentity>;
@@ -446,7 +446,7 @@ class AppStore {
 
 	private loadDebugModeFromStorage() {
 		try {
-			const stored = localStorage.getItem("exo-debug-mode");
+			const stored = localStorage.getItem("vgd-debug-mode");
 			if (stored !== null) {
 				this.debugMode = stored === "true";
 			}
@@ -457,7 +457,7 @@ class AppStore {
 
 	private saveDebugModeToStorage() {
 		try {
-			localStorage.setItem("exo-debug-mode", this.debugMode ? "true" : "false");
+			localStorage.setItem("vgd-debug-mode", this.debugMode ? "true" : "false");
 		} catch (error) {
 			console.error("Failed to save debug mode:", error);
 		}
@@ -465,7 +465,7 @@ class AppStore {
 
 	private loadTopologyOnlyModeFromStorage() {
 		try {
-			const stored = localStorage.getItem("exo-topology-only-mode");
+			const stored = localStorage.getItem("vgd-topology-only-mode");
 			if (stored !== null) {
 				this.topologyOnlyMode = stored === "true";
 			}
@@ -477,7 +477,7 @@ class AppStore {
 	private saveTopologyOnlyModeToStorage() {
 		try {
 			localStorage.setItem(
-				"exo-topology-only-mode",
+				"vgd-topology-only-mode",
 				this.topologyOnlyMode ? "true" : "false",
 			);
 		} catch (error) {
@@ -487,7 +487,7 @@ class AppStore {
 
 	private loadChatSidebarVisibleFromStorage() {
 		try {
-			const stored = localStorage.getItem("exo-chat-sidebar-visible");
+			const stored = localStorage.getItem("vgd-chat-sidebar-visible");
 			if (stored !== null) {
 				this.chatSidebarVisible = stored === "true";
 			}
@@ -499,7 +499,7 @@ class AppStore {
 	private saveChatSidebarVisibleToStorage() {
 		try {
 			localStorage.setItem(
-				"exo-chat-sidebar-visible",
+				"vgd-chat-sidebar-visible",
 				this.chatSidebarVisible ? "true" : "false",
 			);
 		} catch (error) {

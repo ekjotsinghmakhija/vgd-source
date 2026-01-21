@@ -5,8 +5,8 @@
 </script>
 
 <svelte:head>
-	<title>EXO</title>
-	<meta name="description" content="EXO - Distributed AI Cluster Dashboard" />
+	<title>VGD</title>
+	<meta name="description" content="VGD - Distributed AI Cluster Dashboard" />
 </svelte:head>
 
 <div class="min-h-screen bg-background text-foreground">

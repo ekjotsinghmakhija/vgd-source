@@ -1,4 +1,4 @@
-# EXO Platform support (partial roadmap)
+# VGD Platform support (partial roadmap)
 
 ## Tier 1 support - tested and maintained
 

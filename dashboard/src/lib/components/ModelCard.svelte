@@ -367,22 +367,22 @@ function toggleNodeDetails(nodeId: string): void {
 
 <div class="relative group">
 	<!-- Corner accents -->
-	<div class="absolute -top-px -left-px w-2 h-2 border-l border-t {canFit ? 'border-exo-yellow/30 group-hover:border-exo-yellow/60' : 'border-red-500/30'} transition-colors"></div>
-	<div class="absolute -top-px -right-px w-2 h-2 border-r border-t {canFit ? 'border-exo-yellow/30 group-hover:border-exo-yellow/60' : 'border-red-500/30'} transition-colors"></div>
-	<div class="absolute -bottom-px -left-px w-2 h-2 border-l border-b {canFit ? 'border-exo-yellow/30 group-hover:border-exo-yellow/60' : 'border-red-500/30'} transition-colors"></div>
-	<div class="absolute -bottom-px -right-px w-2 h-2 border-r border-b {canFit ? 'border-exo-yellow/30 group-hover:border-exo-yellow/60' : 'border-red-500/30'} transition-colors"></div>
+	<div class="absolute -top-px -left-px w-2 h-2 border-l border-t {canFit ? 'border-vgd-yellow/30 group-hover:border-vgd-yellow/60' : 'border-red-500/30'} transition-colors"></div>
+	<div class="absolute -top-px -right-px w-2 h-2 border-r border-t {canFit ? 'border-vgd-yellow/30 group-hover:border-vgd-yellow/60' : 'border-red-500/30'} transition-colors"></div>
+	<div class="absolute -bottom-px -left-px w-2 h-2 border-l border-b {canFit ? 'border-vgd-yellow/30 group-hover:border-vgd-yellow/60' : 'border-red-500/30'} transition-colors"></div>
+	<div class="absolute -bottom-px -right-px w-2 h-2 border-r border-b {canFit ? 'border-vgd-yellow/30 group-hover:border-vgd-yellow/60' : 'border-red-500/30'} transition-colors"></div>
 	
-	<div class="bg-exo-dark-gray/60 border {canFit ? 'border-exo-yellow/20 group-hover:border-exo-yellow/40' : 'border-red-500/20'} p-3 transition-all duration-200 group-hover:shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+	<div class="bg-vgd-dark-gray/60 border {canFit ? 'border-vgd-yellow/20 group-hover:border-vgd-yellow/40' : 'border-red-500/20'} p-3 transition-all duration-200 group-hover:shadow-[0_0_15px_rgba(255,215,0,0.1)]">
 		<!-- Model Name & Memory Required -->
 		<div class="flex items-start justify-between gap-2 mb-2">
 			<div class="flex-1 min-w-0">
 			<div class="flex items-center gap-2">
-				<div class="text-exo-yellow text-xs font-mono tracking-wide truncate" title={model.name || model.id}>
+				<div class="text-vgd-yellow text-xs font-mono tracking-wide truncate" title={model.name || model.id}>
 					{model.name || model.id}
 				</div>
 				{#if huggingFaceModelId}
 					<a
-						class="shrink-0 text-white/60 hover:text-exo-yellow transition-colors"
+						class="shrink-0 text-white/60 hover:text-vgd-yellow transition-colors"
 						href={`https://huggingface.co/${huggingFaceModelId}`}
 						target="_blank"
 						rel="noreferrer noopener"
@@ -406,13 +406,13 @@ function toggleNodeDetails(nodeId: string): void {
 					{/if}
 				</div>
 				{#if model.name && model.name !== model.id}
-					<div class="text-xs text-exo-light-gray font-mono truncate mt-0.5" title={model.id}>
+					<div class="text-xs text-vgd-light-gray font-mono truncate mt-0.5" title={model.id}>
 						{model.id}
 					</div>
 				{/if}
 			</div>
 			<div class="flex-shrink-0 text-right">
-				<div class="text-xs font-mono {canFit ? 'text-exo-yellow' : 'text-red-400'}">
+				<div class="text-xs font-mono {canFit ? 'text-vgd-yellow' : 'text-red-400'}">
 					{estimatedMemory}GB
 				</div>
 			</div>
@@ -420,10 +420,10 @@ function toggleNodeDetails(nodeId: string): void {
 		
 		<!-- Configuration Badge -->
 		<div class="flex items-center gap-1.5 mb-2">
-			<span class="px-1.5 py-0.5 text-xs font-mono tracking-wider uppercase bg-exo-medium-gray/30 text-exo-light-gray border border-exo-medium-gray/40">
+			<span class="px-1.5 py-0.5 text-xs font-mono tracking-wider uppercase bg-vgd-medium-gray/30 text-vgd-light-gray border border-vgd-medium-gray/40">
 				{sharding}
 			</span>
-		<span class="px-1.5 py-0.5 text-xs font-mono tracking-wider uppercase bg-exo-medium-gray/30 text-exo-light-gray border border-exo-medium-gray/40">
+		<span class="px-1.5 py-0.5 text-xs font-mono tracking-wider uppercase bg-vgd-medium-gray/30 text-vgd-light-gray border border-vgd-medium-gray/40">
 			{runtime === 'MlxRing' ? 'MLX Ring' : runtime === 'MlxIbv' || runtime === 'MlxJaccl' ? 'MLX RDMA' : runtime}
 		</span>
 		</div>
@@ -431,7 +431,7 @@ function toggleNodeDetails(nodeId: string): void {
 		<!-- Mini Topology Preview -->
 		{#if placementPreview().nodes.length > 0}
 			{@const preview = placementPreview()}
-			<div class="mb-3 bg-exo-black/60 rounded border border-exo-medium-gray/20 p-2 relative overflow-hidden">
+			<div class="mb-3 bg-vgd-black/60 rounded border border-vgd-medium-gray/20 p-2 relative overflow-hidden">
 				<!-- Scanline effect -->
 				<div class="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(255,215,0,0.02)_2px,rgba(255,215,0,0.02)_4px)] pointer-events-none"></div>
 				
@@ -688,15 +688,15 @@ function toggleNodeDetails(nodeId: string): void {
 			disabled={isLaunching || !canFit}
 			class="w-full py-2 text-sm font-mono tracking-wider uppercase border transition-all duration-200 
 				{isLaunching 
-					? 'bg-transparent text-exo-yellow border-exo-yellow/50 cursor-wait' 
+					? 'bg-transparent text-vgd-yellow border-vgd-yellow/50 cursor-wait' 
 					: !canFit
 						? 'bg-red-500/10 text-red-400/70 border-red-500/30 cursor-not-allowed'
-						: 'bg-transparent text-exo-light-gray border-exo-light-gray/40 hover:text-exo-yellow hover:border-exo-yellow/50 cursor-pointer'
+						: 'bg-transparent text-vgd-light-gray border-vgd-light-gray/40 hover:text-vgd-yellow hover:border-vgd-yellow/50 cursor-pointer'
 				}"
 		>
 			{#if isLaunching}
 				<span class="flex items-center justify-center gap-1.5">
-					<span class="w-2 h-2 border border-exo-yellow border-t-transparent rounded-full animate-spin"></span>
+					<span class="w-2 h-2 border border-vgd-yellow border-t-transparent rounded-full animate-spin"></span>
 					LAUNCHING...
 				</span>
 			{:else if !canFit}

@@ -25,16 +25,16 @@
 	}
 </script>
 
-<header class="relative z-20 flex items-center justify-center px-6 pt-8 pb-4 bg-exo-dark-gray">
+<header class="relative z-20 flex items-center justify-center px-6 pt-8 pb-4 bg-vgd-dark-gray">
 	<!-- Left: Sidebar Toggle -->
 	{#if showSidebarToggle}
 	<div class="absolute left-6 top-1/2 -translate-y-1/2">
 		<button
 			onclick={handleToggleSidebar}
-			class="p-2 rounded border border-exo-medium-gray/40 hover:border-exo-yellow/50 transition-colors cursor-pointer"
+			class="p-2 rounded border border-vgd-medium-gray/40 hover:border-vgd-yellow/50 transition-colors cursor-pointer"
 			title={sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}
 		>
-			<svg class="w-5 h-5 {sidebarVisible ? 'text-exo-yellow' : 'text-exo-medium-gray'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+			<svg class="w-5 h-5 {sidebarVisible ? 'text-vgd-yellow' : 'text-vgd-medium-gray'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 				{#if sidebarVisible}
 					<path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
 				{:else}
@@ -52,7 +52,7 @@
 		title={showHome ? 'Go to home' : ''}
 		disabled={!showHome}
 	>
-		<img src="/exo-logo.png" alt="EXO" class="h-18 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]" />
+		<img src="/vgd-logo.png" alt="VGD" class="h-18 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]" />
 	</button>
 
 	<!-- Right: Home + Downloads -->
@@ -60,7 +60,7 @@
 		{#if showHome}
 			<button
 				onclick={handleHome}
-				class="text-sm text-exo-light-gray hover:text-exo-yellow transition-colors tracking-wider uppercase flex items-center gap-2 cursor-pointer"
+				class="text-sm text-vgd-light-gray hover:text-vgd-yellow transition-colors tracking-wider uppercase flex items-center gap-2 cursor-pointer"
 				title="Back to topology view"
 			>
 				<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -71,7 +71,7 @@
 		{/if}
 		<a
 			href="/#/downloads"
-			class="text-sm text-exo-light-gray hover:text-exo-yellow transition-colors tracking-wider uppercase flex items-center gap-2 cursor-pointer"
+			class="text-sm text-vgd-light-gray hover:text-vgd-yellow transition-colors tracking-wider uppercase flex items-center gap-2 cursor-pointer"
 			title="View downloads overview"
 		>
 			<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

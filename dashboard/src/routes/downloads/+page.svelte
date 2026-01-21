@@ -149,7 +149,7 @@
 	function getBarGradient(percentage: number): string {
 		if (percentage >= 100) return 'from-green-500 to-green-400';
 		if (percentage <= 0) return 'from-red-500 to-red-400';
-		return 'from-exo-yellow to-exo-yellow/70';
+		return 'from-vgd-yellow to-vgd-yellow/70';
 	}
 
 	let downloadOverview = $state<NodeEntry[]>([]);
@@ -299,50 +299,50 @@
 	});
 </script>
 
-<div class="min-h-screen bg-exo-dark-gray text-white">
+<div class="min-h-screen bg-vgd-dark-gray text-white">
 	<HeaderNav showHome={true} />
 	<div class="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6">
 		<div class="flex items-center justify-between gap-4 flex-wrap">
 			<div>
-				<h1 class="text-2xl font-mono tracking-[0.2em] uppercase text-exo-yellow">Downloads</h1>
-				<p class="text-sm text-exo-light-gray">Overview of models on each node</p>
+				<h1 class="text-2xl font-mono tracking-[0.2em] uppercase text-vgd-yellow">Downloads</h1>
+				<p class="text-sm text-vgd-light-gray">Overview of models on each node</p>
 			</div>
 			<div class="flex items-center gap-3">
 				<button
 					type="button"
-					class="text-xs font-mono text-exo-light-gray hover:text-exo-yellow transition-colors uppercase border border-exo-medium-gray/40 px-2 py-1 rounded"
+					class="text-xs font-mono text-vgd-light-gray hover:text-vgd-yellow transition-colors uppercase border border-vgd-medium-gray/40 px-2 py-1 rounded"
 					onclick={() => refreshState()}
 					title="Force refresh from /state"
 				>
 					Refresh
 				</button>
-				<div class="text-[11px] font-mono text-exo-light-gray">
+				<div class="text-[11px] font-mono text-vgd-light-gray">
 					Last update: {lastUpdateTs ? new Date(lastUpdateTs).toLocaleTimeString() : 'n/a'}
 				</div>
 			</div>
 		</div>
 
 		{#if !hasDownloads}
-			<div class="rounded border border-exo-medium-gray/30 bg-exo-black/30 p-6 text-center text-exo-light-gray space-y-2">
+			<div class="rounded border border-vgd-medium-gray/30 bg-vgd-black/30 p-6 text-center text-vgd-light-gray space-y-2">
 				<div class="text-sm">No downloads found. Start a model download to see progress here.</div>
-				<div class="text-[11px] text-exo-light-gray/70">
+				<div class="text-[11px] text-vgd-light-gray/70">
 					Download keys detected: {downloadKeys.length === 0 ? 'none' : downloadKeys.join(', ')}
 				</div>
 			</div>
 		{:else}
 			<div class="downloads-grid gap-4">
 				{#each downloadOverview as node}
-					<div class="rounded border border-exo-medium-gray/30 bg-exo-black/30 p-4 space-y-3 flex flex-col">
+					<div class="rounded border border-vgd-medium-gray/30 bg-vgd-black/30 p-4 space-y-3 flex flex-col">
 						<div class="flex items-center justify-between gap-3">
 							<div class="min-w-0 flex-1">
 								<div class="text-lg font-mono text-white truncate">{node.nodeName}</div>
-								<div class="text-xs text-exo-light-gray font-mono truncate">{node.nodeId}</div>
+								<div class="text-xs text-vgd-light-gray font-mono truncate">{node.nodeId}</div>
 							</div>
 							<div class="text-xs font-mono uppercase tracking-wider whitespace-nowrap shrink-0 text-right">
 								<div>
-									<span class="text-green-400">{node.models.filter(m => m.status === 'completed').length}</span><span class="text-exo-yellow"> / {node.models.length} models</span>
+									<span class="text-green-400">{node.models.filter(m => m.status === 'completed').length}</span><span class="text-vgd-yellow"> / {node.models.length} models</span>
 								</div>
-								<div class="text-exo-light-gray normal-case tracking-normal">
+								<div class="text-vgd-light-gray normal-case tracking-normal">
 									{formatBytes(node.models.filter(m => m.status === 'completed').reduce((sum, m) => sum + m.totalBytes, 0))} on disk
 								</div>
 							</div>
@@ -353,7 +353,7 @@
 							{@const pct = clampPercent(model.percentage)}
 							{@const gradient = getBarGradient(pct)}
 							{@const isExpanded = expanded.has(key)}
-							<div class="rounded border border-exo-medium-gray/30 bg-exo-dark-gray/60 p-3 space-y-2">
+							<div class="rounded border border-vgd-medium-gray/30 bg-vgd-dark-gray/60 p-3 space-y-2">
 								<div class="flex items-center justify-between gap-3">
 									<div class="min-w-0 space-y-0.5">
 										<div 
@@ -361,22 +361,22 @@
 											title={model.prettyName ?? model.modelId}
 										>{model.prettyName ?? model.modelId}</div>
 										<div 
-											class="text-[10px] text-exo-light-gray font-mono truncate"
+											class="text-[10px] text-vgd-light-gray font-mono truncate"
 											title={model.modelId}
 										>{model.modelId}</div>
 										{#if model.status !== 'completed'}
-											<div class="text-[11px] text-exo-light-gray font-mono">
+											<div class="text-[11px] text-vgd-light-gray font-mono">
 												{formatBytes(model.downloadedBytes)} / {formatBytes(model.totalBytes)}
 											</div>
 										{/if}
 									</div>
 									<div class="flex items-center gap-2">
-										<span class="text-xs font-mono {pct >= 100 ? 'text-green-400' : pct <= 0 ? 'text-red-400' : 'text-exo-yellow'}">
+										<span class="text-xs font-mono {pct >= 100 ? 'text-green-400' : pct <= 0 ? 'text-red-400' : 'text-vgd-yellow'}">
 											{pct.toFixed(1)}%
 										</span>
 										<button
 											type="button"
-											class="text-exo-light-gray hover:text-exo-yellow transition-colors"
+											class="text-vgd-light-gray hover:text-vgd-yellow transition-colors"
 											onclick={() => toggleExpand(key)}
 											aria-expanded={isExpanded}
 											title="Toggle file details"
@@ -388,14 +388,14 @@
 									</div>
 								</div>
 
-								<div class="relative h-2 bg-exo-black/60 rounded-sm overflow-hidden">
+								<div class="relative h-2 bg-vgd-black/60 rounded-sm overflow-hidden">
 									<div
 										class={`absolute inset-y-0 left-0 bg-gradient-to-r ${gradient} transition-all duration-300`}
 										style={`width: ${pct.toFixed(1)}%`}
 									></div>
 								</div>
 
-								<div class="flex items-center justify-between text-xs font-mono text-exo-light-gray">
+								<div class="flex items-center justify-between text-xs font-mono text-vgd-light-gray">
 									<span>{model.status === 'completed' ? `Completed (${formatBytes(model.totalBytes)})` : `${formatSpeed(model.speed)} • ETA ${formatEta(model.etaMs)}`}</span>
 									{#if model.status !== 'completed'}
 										<span>{model.files.length} file{model.files.length === 1 ? '' : 's'}</span>
@@ -405,23 +405,23 @@
 								{#if isExpanded}
 									<div class="mt-2 space-y-1.5">
 										{#if model.files.length === 0}
-											<div class="text-[11px] font-mono text-exo-light-gray/70">No file details reported.</div>
+											<div class="text-[11px] font-mono text-vgd-light-gray/70">No file details reported.</div>
 										{:else}
 											{#each model.files as f}
 												{@const fpct = clampPercent(f.percentage)}
 												{@const fgradient = getBarGradient(fpct)}
-												<div class="rounded border border-exo-medium-gray/20 bg-exo-black/40 p-2 space-y-1">
-													<div class="flex items-center justify-between text-[11px] font-mono text-exo-light-gray/90">
+												<div class="rounded border border-vgd-medium-gray/20 bg-vgd-black/40 p-2 space-y-1">
+													<div class="flex items-center justify-between text-[11px] font-mono text-vgd-light-gray/90">
 														<span class="truncate pr-2">{f.name}</span>
-														<span class="{fpct >= 100 ? 'text-green-400' : fpct <= 0 ? 'text-red-400' : 'text-exo-yellow'}">{fpct.toFixed(1)}%</span>
+														<span class="{fpct >= 100 ? 'text-green-400' : fpct <= 0 ? 'text-red-400' : 'text-vgd-yellow'}">{fpct.toFixed(1)}%</span>
 													</div>
-													<div class="relative h-1.5 bg-exo-black/60 rounded-sm overflow-hidden">
+													<div class="relative h-1.5 bg-vgd-black/60 rounded-sm overflow-hidden">
 														<div
 															class={`absolute inset-y-0 left-0 bg-gradient-to-r ${fgradient} transition-all duration-300`}
 															style={`width: ${fpct.toFixed(1)}%`}
 														></div>
 													</div>
-													<div class="flex items-center justify-between text-[10px] text-exo-light-gray/70">
+													<div class="flex items-center justify-between text-[10px] text-vgd-light-gray/70">
 														<span>{formatBytes(f.downloadedBytes)} / {formatBytes(f.totalBytes)}</span>
 														<span>{formatSpeed(f.speed)} • ETA {formatEta(f.etaMs)}</span>
 													</div>

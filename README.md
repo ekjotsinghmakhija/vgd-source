@@ -1,15 +1,14 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: light)" srcset="/docs/imgs/exo-logo-black-bg.jpg">
-  <img alt="exo logo" src="/docs/imgs/exo-logo-transparent.png" width="50%" height="50%">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/imgs/vgd-logo-black-bg.jpg">
+  <img alt="vgd logo" src="/docs/imgs/vgd-logo-transparent.png" width="50%" height="50%">
 </picture>
 
-exo: Run your own AI cluster at home with everyday devices. Maintained by [exo labs](https://x.com/exolabs).
+vgd: Run your own AI cluster at home with everyday devices. Maintained by [vgd labs](https://x.com/ek10sh).
 
 <p align="center">
-  <a href="https://discord.gg/TJ4P57arEm" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
-  <a href="https://x.com/exolabs" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/twitter/follow/exolabs?style=social" alt="X"></a>
+  <a href="https://x.com/ek10sh" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/twitter/follow/vgdlabs?style=social" alt="X"></a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/License-Apache2.0-blue.svg" alt="License: Apache-2.0"></a>
 </p>
 
@@ -17,22 +16,22 @@ exo: Run your own AI cluster at home with everyday devices. Maintained by [exo l
 
 ---
 
-exo connects all your devices into an AI cluster. Not only does exo enable running models larger than would fit on a single device, but with [day-0 support for RDMA over Thunderbolt](https://x.com/exolabs/status/2001817749744476256?s=20), makes models run faster as you add more devices.
+vgd connects all your devices into an AI cluster. Not only does vgd enable running models larger than would fit on a single device, but with [day-0 support for RDMA over Thunderbolt](https://x.com/ek10sh/status/2014001203965800934), makes models run faster as you add more devices.
 
 ## Features
 
-- **Automatic Device Discovery**: Devices running exo automatically discover each other - no manual configuration.
-- **RDMA over Thunderbolt**: exo ships with [day-0 support for RDMA over Thunderbolt 5](https://x.com/exolabs/status/2001817749744476256?s=20), enabling 99% reduction in latency between devices.
-- **Topology-Aware Auto Parallel**: exo figures out the best way to split your model across all available devices based on a realtime view of your device topology. It takes into account device resources and network latency/bandwidth between each link.
-- **Tensor Parallelism**: exo supports sharding models, for up to 1.8x speedup on 2 devices and 3.2x speedup on 4 devices.
-- **MLX Support**: exo uses [MLX](https://github.com/ml-explore/mlx) as an inference backend and [MLX distributed](https://ml-explore.github.io/mlx/build/html/usage/distributed.html) for distributed communication.
+- **Automatic Device Discovery**: Devices running vgd automatically discover each other - no manual configuration.
+- **RDMA over Thunderbolt**: vgd ships with [day-0 support for RDMA over Thunderbolt 5](https://x.com/ek10sh/status/2014001203965800934), enabling 99% reduction in latency between devices.
+- **Topology-Aware Auto Parallel**: vgd figures out the best way to split your model across all available devices based on a realtime view of your device topology. It takes into account device resources and network latency/bandwidth between each link.
+- **Tensor Parallelism**: vgd supports sharding models, for up to 1.8x speedup on 2 devices and 3.2x speedup on 4 devices.
+- **MLX Support**: vgd uses [MLX](https://github.com/ml-explore/mlx) as an inference backend and [MLX distributed](https://ml-explore.github.io/mlx/build/html/usage/distributed.html) for distributed communication.
 
 ## Dashboard
 
-exo includes a built-in dashboard for managing your cluster and chatting with models.
+vgd includes a built-in dashboard for managing your cluster and chatting with models.
 
 <p align="center">
-  <img src="docs/imgs/dashboard-cluster-view.png" alt="exo dashboard - cluster view showing 4 x M3 Ultra Mac Studio with DeepSeek v3.1 and Kimi-K2-Thinking loaded" width="80%" />
+  <img src="docs/imgs/dashboard-cluster-view.png" alt="vgd dashboard - cluster view showing 4 x M3 Ultra Mac Studio with DeepSeek v3.1 and Kimi-K2-Thinking loaded" width="80%" />
 </p>
 <p align="center"><em>4 × 512GB M3 Ultra Mac Studio running DeepSeek v3.1 (8-bit) and Kimi-K2-Thinking (4-bit)</em></p>
 
@@ -66,22 +65,22 @@ exo includes a built-in dashboard for managing your cluster and chatting with mo
 
 ## Quick Start
 
-Devices running exo automatically discover each other, without needing any manual configuration. Each device provides an API and a dashboard for interacting with your cluster (runs at `http://localhost:52415`).
+Devices running vgd automatically discover each other, without needing any manual configuration. Each device provides an API and a dashboard for interacting with your cluster (runs at `http://localhost:52415`).
 
-There are two ways to run exo:
+There are two ways to run vgd:
 
 ### Run from Source (macOS)
 
 **Prerequisites:**
 - [brew](https://github.com/Homebrew/brew) (for simple package management on macOS)
-  
+
   ```bash
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   ```
 - [uv](https://github.com/astral-sh/uv) (for Python dependency management)
 - [macmon](https://github.com/vladkens/macmon) (for hardware monitoring on Apple Silicon)
 - [node](https://github.com/nodejs/node) (for building the dashboard)
-  
+
   ```bash
   brew install uv macmon node
   ```
@@ -92,20 +91,20 @@ There are two ways to run exo:
   rustup toolchain install nightly
   ```
 
-Clone the repo, build the dashboard, and run exo:
+Clone the repo, build the dashboard, and run vgd:
 
 ```bash
-# Clone exo
-git clone https://github.com/exo-explore/exo
+# Clone vgd
+git clone https://github.com/vgd-explore/vgd
 
 # Build dashboard
-cd exo/dashboard && npm install && npm run build && cd ..
+cd vgd/dashboard && npm install && npm run build && cd ..
 
-# Run exo
-uv run exo
+# Run vgd
+uv run vgd
 ```
 
-This starts the exo dashboard and API at http://localhost:52415/
+This starts the vgd dashboard and API at http://localhost:52415/
 
 ### Run from Source (Linux)
 
@@ -146,63 +145,63 @@ rustup toolchain install nightly
 
 **Note:** The `macmon` package is macOS-only and not required for Linux.
 
-Clone the repo, build the dashboard, and run exo:
+Clone the repo, build the dashboard, and run vgd:
 
 ```bash
-# Clone exo
-git clone https://github.com/exo-explore/exo
+# Clone vgd
+git clone https://github.com/vgd-explore/vgd
 
 # Build dashboard
-cd exo/dashboard && npm install && npm run build && cd ..
+cd vgd/dashboard && npm install && npm run build && cd ..
 
-# Run exo
-uv run exo
+# Run vgd
+uv run vgd
 ```
 
-This starts the exo dashboard and API at http://localhost:52415/
+This starts the vgd dashboard and API at http://localhost:52415/
 
-**Important note for Linux users:** Currently, exo runs on CPU on Linux. GPU support for Linux platforms is under development. If you'd like to see support for your specific Linux hardware, please [search for existing feature requests](https://github.com/exo-explore/exo/issues) or create a new one.
+**Important note for Linux users:** Currently, vgd runs on CPU on Linux. GPU support for Linux platforms is under development. If you'd like to see support for your specific Linux hardware, please [search for existing feature requests](https://github.com/vgd-explore/vgd/issues) or create a new one.
 
 **Configuration Options:**
 
-- `--no-worker`: Run exo without the worker component. Useful for coordinator-only nodes that handle networking and orchestration but don't execute inference tasks. This is helpful for machines without sufficient GPU resources but with good network connectivity.
+- `--no-worker`: Run vgd without the worker component. Useful for coordinator-only nodes that handle networking and orchestration but don't execute inference tasks. This is helpful for machines without sufficient GPU resources but with good network connectivity.
 
   ```bash
-  uv run exo --no-worker
+  uv run vgd --no-worker
   ```
 
 **File Locations (Linux):**
 
-exo follows the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) on Linux:
+vgd follows the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) on Linux:
 
-- **Configuration files**: `~/.config/exo/` (or `$XDG_CONFIG_HOME/exo/`)
-- **Data files**: `~/.local/share/exo/` (or `$XDG_DATA_HOME/exo/`)
-- **Cache files**: `~/.cache/exo/` (or `$XDG_CACHE_HOME/exo/`)
+- **Configuration files**: `~/.config/vgd/` (or `$XDG_CONFIG_HOME/vgd/`)
+- **Data files**: `~/.local/share/vgd/` (or `$XDG_DATA_HOME/vgd/`)
+- **Cache files**: `~/.cache/vgd/` (or `$XDG_CACHE_HOME/vgd/`)
 
 You can override these locations by setting the corresponding XDG environment variables.
 
 ### macOS App
 
-exo ships a macOS app that runs in the background on your Mac.
+vgd ships a macOS app that runs in the background on your Mac.
 
-<img src="docs/imgs/macos-app-one-macbook.png" alt="exo macOS App - running on a MacBook" width="35%" />
+<img src="docs/imgs/macos-app-one-macbook.png" alt="vgd macOS App - running on a MacBook" width="35%" />
 
 The macOS app requires macOS Tahoe 26.2 or later.
 
-Download the latest build here: [EXO-latest.dmg](https://assets.exolabs.net/EXO-latest.dmg).
+Download the latest build here: [VGD-latest.dmg](https://assets.vgdlabs.net/VGD-latest.dmg).
 
 The app will ask for permission to modify system settings and install a new Network profile. Improvements to this are being worked on.
 
 **Custom Namespace for Cluster Isolation:**
 
-The macOS app includes a custom namespace feature that allows you to isolate your exo cluster from others on the same network. This is configured through the `EXO_LIBP2P_NAMESPACE` setting:
+The macOS app includes a custom namespace feature that allows you to isolate your vgd cluster from others on the same network. This is configured through the `VGD_LIBP2P_NAMESPACE` setting:
 
 - **Use cases**:
-  - Running multiple separate exo clusters on the same network
+  - Running multiple separate vgd clusters on the same network
   - Isolating development/testing clusters from production clusters
   - Preventing accidental cluster joining
 
-- **Configuration**: Access this setting in the app's Advanced settings (or set the `EXO_LIBP2P_NAMESPACE` environment variable when running from source)
+- **Configuration**: Access this setting in the app's Advanced settings (or set the `VGD_LIBP2P_NAMESPACE` environment variable when running from source)
 
 The namespace is logged on startup for debugging purposes.
 
@@ -213,16 +212,16 @@ The recommended way to uninstall is through the app itself: click the menu bar i
 If you've already deleted the app, you can run the standalone uninstaller script:
 
 ```bash
-sudo ./app/EXO/uninstall-exo.sh
+sudo ./app/VGD/uninstall-vgd.sh
 ```
 
 This removes:
 - Network setup LaunchDaemon
 - Network configuration script
 - Log files
-- The "exo" network location
+- The "vgd" network location
 
-**Note:** You'll need to manually remove EXO from Login Items in System Settings → General → Login Items.
+**Note:** You'll need to manually remove VGD from Login Items in System Settings → General → Login Items.
 
 ---
 
@@ -245,13 +244,13 @@ To enable RDMA on macOS, follow these steps:
    and press Enter.
 6. Reboot your Mac.
 
-After that, RDMA will be enabled in macOS and exo will take care of the rest.
+After that, RDMA will be enabled in macOS and vgd will take care of the rest.
 
 ---
 
 ### Using the API
 
-If you prefer to interact with exo via the API, here is an example creating an instance of a small model (`mlx-community/Llama-3.2-1B-Instruct-4bit`), sending a chat completions request and deleting the instance.
+If you prefer to interact with vgd via the API, here is an example creating an instance of a small model (`mlx-community/Llama-3.2-1B-Instruct-4bit`), sending a chat completions request and deleting the instance.
 
 ---
 
@@ -348,22 +347,22 @@ curl -X DELETE http://localhost:52415/instance/YOUR_INSTANCE_ID
 For further details, see:
 
 - API basic documentation in [docs/api.md](docs/api.md).
-- API types and endpoints in [src/exo/master/api.py](src/exo/master/api.py).
+- API types and endpoints in [src/vgd/master/api.py](src/vgd/master/api.py).
 
 ---
 
 ## Benchmarking
 
-The `exo-bench` tool measures model prefill and token generation speed across different placement configurations. This helps you optimize model performance and validate improvements.
+The `vgd-bench` tool measures model prefill and token generation speed across different placement configurations. This helps you optimize model performance and validate improvements.
 
 **Prerequisites:**
-- Nodes should be running with `uv run exo` before benchmarking
+- Nodes should be running with `uv run vgd` before benchmarking
 - The tool uses the `/bench/chat/completions` endpoint
 
 **Basic usage:**
 
 ```bash
-uv run bench/exo_bench.py \
+uv run bench/vgd_bench.py \
   --model llama-3.2-1b \
   --pp 128,256,512 \
   --tg 128,256
@@ -384,7 +383,7 @@ uv run bench/exo_bench.py \
 **Example with filters:**
 
 ```bash
-uv run bench/exo_bench.py \
+uv run bench/vgd_bench.py \
   --model llama-3.2-1b \
   --pp 128,512 \
   --tg 128 \
@@ -400,10 +399,10 @@ The tool outputs performance metrics including prompt tokens per second (prompt_
 
 ## Hardware Accelerator Support
 
-On macOS, exo uses the GPU. On Linux, exo currently runs on CPU. We are working on extending hardware accelerator support. If you'd like support for a new hardware platform, please [search for an existing feature request](https://github.com/exo-explore/exo/issues) and add a thumbs up so we know what hardware is important to the community.
+On macOS, vgd uses the GPU. On Linux, vgd currently runs on CPU. We are working on extending hardware accelerator support. If you'd like support for a new hardware platform, please [search for an existing feature request](https://github.com/vgd-explore/vgd/issues) and add a thumbs up so we know what hardware is important to the community.
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to exo.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to vgd.

@@ -179,7 +179,7 @@ function wrapLine(text: string, maxLen: number): string[] {
 		marker.append('path')
 			.attr('d', 'M 0 0 L 10 5 L 0 10')
 			.attr('fill', 'none')
-			.attr('stroke', 'var(--exo-light-gray, #B3B3B3)')
+			.attr('stroke', 'var(--vgd-light-gray, #B3B3B3)')
 			.attr('stroke-width', '1.6')
 			.attr('stroke-linecap', 'round')
 			.attr('stroke-linejoin', 'round')
@@ -969,7 +969,7 @@ function wrapLine(text: string, maxLen: number): string[] {
 		filter: brightness(1.1);
 	}
 	:global(.graph-link) {
-		stroke: var(--exo-light-gray, #B3B3B3);
+		stroke: var(--vgd-light-gray, #B3B3B3);
 		stroke-width: 1px;
 		stroke-dasharray: 4, 4;
 		opacity: 0.8;

@@ -11,13 +11,13 @@ from hypercorn.asyncio import serve  # pyright: ignore[reportUnknownVariableType
 from loguru import logger
 from pydantic import BaseModel
 
-from exo.shared.logging import InterceptLogger, logger_setup
-from exo.shared.models.model_cards import MODEL_CARDS, ModelId
-from exo.shared.types.api import ChatCompletionMessage, ChatCompletionTaskParams
-from exo.shared.types.commands import CommandId
-from exo.shared.types.common import Host, NodeId
-from exo.shared.types.events import Event
-from exo.shared.types.tasks import (
+from vgd.shared.logging import InterceptLogger, logger_setup
+from vgd.shared.models.model_cards import MODEL_CARDS, ModelId
+from vgd.shared.types.api import ChatCompletionMessage, ChatCompletionTaskParams
+from vgd.shared.types.commands import CommandId
+from vgd.shared.types.common import Host, NodeId
+from vgd.shared.types.events import Event
+from vgd.shared.types.tasks import (
     ChatCompletion,
     ConnectToGroup,
     LoadModel,
@@ -25,22 +25,22 @@ from exo.shared.types.tasks import (
     StartWarmup,
     Task,
 )
-from exo.shared.types.worker.instances import (
+from vgd.shared.types.worker.instances import (
     BoundInstance,
     Instance,
     InstanceId,
     MlxJacclInstance,
     MlxRingInstance,
 )
-from exo.shared.types.worker.runners import RunnerId, ShardAssignments
-from exo.shared.types.worker.shards import PipelineShardMetadata, TensorShardMetadata
-from exo.utils.channels import MpReceiver, MpSender, channel, mp_channel
-from exo.utils.info_gatherer.info_gatherer import GatheredInfo, InfoGatherer
-from exo.worker.download.impl_shard_downloader import (
+from vgd.shared.types.worker.runners import RunnerId, ShardAssignments
+from vgd.shared.types.worker.shards import PipelineShardMetadata, TensorShardMetadata
+from vgd.utils.channels import MpReceiver, MpSender, channel, mp_channel
+from vgd.utils.info_gatherer.info_gatherer import GatheredInfo, InfoGatherer
+from vgd.worker.download.impl_shard_downloader import (
     build_full_shard,
-    exo_shard_downloader,
+    vgd_shard_downloader,
 )
-from exo.worker.runner.bootstrap import entrypoint
+from vgd.worker.runner.bootstrap import entrypoint
 
 
 class Tests(BaseModel):
@@ -88,7 +88,7 @@ async def tb_detection():
 
 
 async def assert_downloads():
-    sd = exo_shard_downloader()
+    sd = vgd_shard_downloader()
     # await sd.ensure_shard(await build_full_shard(MODEL_CARDS["qwen3-0.6b"].model_id))
     await sd.ensure_shard(
         await build_full_shard(MODEL_CARDS["llama-3.1-8b-bf16"].model_id)

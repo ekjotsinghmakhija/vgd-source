@@ -1,10 +1,10 @@
-# Contributing to EXO
+# Contributing to VGD
 
-Thank you for your interest in contributing to EXO!
+Thank you for your interest in contributing to VGD!
 
 ## Getting Started
 
-To run EXO from source:
+To run VGD from source:
 
 **Prerequisites:**
 - [uv](https://github.com/astral-sh/uv) (for Python dependency management)
@@ -17,15 +17,15 @@ To run EXO from source:
   ```
 
 ```bash
-git clone https://github.com/exo-explore/exo.git
-cd exo/dashboard
+git clone https://github.com/vgd-explore/vgd.git
+cd vgd/dashboard
 npm install && npm run build && cd ..
-uv run exo
+uv run vgd
 ```
 
 ## Development
 
-EXO is built with a mix of Rust, Python, and TypeScript (Svelte for the dashboard), and the codebase is actively evolving. Before starting work:
+VGD is built with a mix of Rust, Python, and TypeScript (Svelte for the dashboard), and the codebase is actively evolving. Before starting work:
 
 - Pull the latest source to ensure you're working with the most recent code
 - Keep your changes focused - implement one feature or fix per pull request
@@ -41,7 +41,7 @@ Run `nix fmt` to auto-format your code before submitting.
 
 ## Testing
 
-EXO relies heavily on manual testing at this point in the project, but this is evolving. Before submitting a change, test both before and after to demonstrate how your change improves behavior. Do the best you can with the hardware you have available - if you need help testing, ask and we'll do our best to assist. Add automated tests where possible - we're actively working to substantially improve our automated testing story.
+VGD relies heavily on manual testing at this point in the project, but this is evolving. Before submitting a change, test both before and after to demonstrate how your change improves behavior. Do the best you can with the hardware you have available - if you need help testing, ask and we'll do our best to assist. Add automated tests where possible - we're actively working to substantially improve our automated testing story.
 
 ## Submitting Changes
 
@@ -62,4 +62,4 @@ If you find a bug or have a feature request, please open an issue on GitHub with
 ## Questions?
 
 Join our community:
-- [X](https://x.com/exolabs)
+- [X](https://x.com/vgdlabs)

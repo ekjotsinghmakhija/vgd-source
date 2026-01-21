@@ -226,21 +226,21 @@ function isThinkingExpanded(messageId: string): boolean {
 				{#if message.role === 'assistant'}
 					<!-- Assistant message header -->
 					<div class="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-						<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-exo-yellow rounded-full shadow-[0_0_10px_rgba(255,215,0,0.5)]"></div>
-						<span class="text-sm sm:text-xs text-exo-yellow tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium">EXO</span>
-						<span class="text-xs sm:text-sm text-exo-light-gray tracking-wider tabular-nums">{formatTimestamp(message.timestamp)}</span>
+						<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-vgd-yellow rounded-full shadow-[0_0_10px_rgba(255,215,0,0.5)]"></div>
+						<span class="text-sm sm:text-xs text-vgd-yellow tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium">VGD</span>
+						<span class="text-xs sm:text-sm text-vgd-light-gray tracking-wider tabular-nums">{formatTimestamp(message.timestamp)}</span>
 						{#if message.ttftMs || message.tps}
-							<span class="text-xs text-exo-light-gray/80 font-mono ml-2">
-								{#if message.ttftMs}<span class="text-exo-light-gray/50">TTFT</span> {message.ttftMs.toFixed(0)}ms{/if}{#if message.ttftMs && message.tps}<span class="text-exo-light-gray/30 mx-1">•</span>{/if}{#if message.tps}{message.tps.toFixed(1)} <span class="text-exo-light-gray/50">tok/s</span>{/if}
+							<span class="text-xs text-vgd-light-gray/80 font-mono ml-2">
+								{#if message.ttftMs}<span class="text-vgd-light-gray/50">TTFT</span> {message.ttftMs.toFixed(0)}ms{/if}{#if message.ttftMs && message.tps}<span class="text-vgd-light-gray/30 mx-1">•</span>{/if}{#if message.tps}{message.tps.toFixed(1)} <span class="text-vgd-light-gray/50">tok/s</span>{/if}
 							</span>
 						{/if}
 					</div>
 				{:else}
 					<!-- User message header -->
 					<div class="flex items-center justify-end gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-						<span class="text-xs sm:text-sm text-exo-light-gray tracking-wider tabular-nums">{formatTimestamp(message.timestamp)}</span>
-						<span class="text-sm sm:text-xs text-exo-light-gray tracking-[0.1em] sm:tracking-[0.15em] uppercase">QUERY</span>
-						<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-exo-light-gray/50 rounded-full"></div>
+						<span class="text-xs sm:text-sm text-vgd-light-gray tracking-wider tabular-nums">{formatTimestamp(message.timestamp)}</span>
+						<span class="text-sm sm:text-xs text-vgd-light-gray tracking-[0.1em] sm:tracking-[0.15em] uppercase">QUERY</span>
+						<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-vgd-light-gray/50 rounded-full"></div>
 					</div>
 				{/if}
 				
@@ -251,7 +251,7 @@ function isThinkingExpanded(messageId: string): boolean {
 						<div class="flex gap-2 justify-end">
 						<button
 							onclick={handleCancelDelete}
-							class="px-3 py-1.5 text-sm font-mono tracking-wider uppercase bg-exo-medium-gray/20 text-exo-light-gray border border-exo-medium-gray/30 rounded hover:bg-exo-medium-gray/30 transition-colors cursor-pointer"
+							class="px-3 py-1.5 text-sm font-mono tracking-wider uppercase bg-vgd-medium-gray/20 text-vgd-light-gray border border-vgd-medium-gray/30 rounded hover:bg-vgd-medium-gray/30 transition-colors cursor-pointer"
 						>
 							CANCEL
 						</button>
@@ -271,20 +271,20 @@ function isThinkingExpanded(messageId: string): boolean {
 							bind:value={editContent}
 							onkeydown={handleEditKeydown}
 							oninput={handleEditInput}
-							class="w-full bg-exo-black/60 border border-exo-yellow/30 rounded px-3 py-2 text-sm text-foreground font-mono focus:outline-none focus:border-exo-yellow/50 resize-none"
+							class="w-full bg-vgd-black/60 border border-vgd-yellow/30 rounded px-3 py-2 text-sm text-foreground font-mono focus:outline-none focus:border-vgd-yellow/50 resize-none"
 							style="min-height: 60px; max-height: 200px;"
 						></textarea>
 						<div class="flex gap-2 justify-end mt-2">
 						<button
 							onclick={handleCancelEdit}
-							class="px-3 py-1.5 text-sm font-mono tracking-wider uppercase bg-exo-medium-gray/20 text-exo-light-gray border border-exo-medium-gray/30 rounded hover:bg-exo-medium-gray/30 transition-colors cursor-pointer"
+							class="px-3 py-1.5 text-sm font-mono tracking-wider uppercase bg-vgd-medium-gray/20 text-vgd-light-gray border border-vgd-medium-gray/30 rounded hover:bg-vgd-medium-gray/30 transition-colors cursor-pointer"
 						>
 							CANCEL
 						</button>
 						<button
 							onclick={handleSaveEdit}
 							disabled={!editContent.trim()}
-							class="px-3 py-1.5 text-sm font-mono tracking-wider uppercase bg-transparent text-exo-yellow border border-exo-yellow/30 rounded hover:border-exo-yellow/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+							class="px-3 py-1.5 text-sm font-mono tracking-wider uppercase bg-transparent text-vgd-yellow border border-vgd-yellow/30 rounded hover:border-vgd-yellow/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
 						>
 								<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -296,7 +296,7 @@ function isThinkingExpanded(messageId: string): boolean {
 				{:else}
 					<div class="{message.role === 'user' 
 						? 'command-panel rounded-lg rounded-tr-sm inline-block' 
-						: 'command-panel rounded-lg rounded-tl-sm border-l-2 border-l-exo-yellow/50 block w-full'}">
+						: 'command-panel rounded-lg rounded-tl-sm border-l-2 border-l-vgd-yellow/50 block w-full'}">
 						
 						{#if message.role === 'user'}
 							<!-- User message styling -->
@@ -305,17 +305,17 @@ function isThinkingExpanded(messageId: string): boolean {
 								{#if message.attachments && message.attachments.length > 0}
 									<div class="flex flex-wrap gap-2 mb-3">
 										{#each message.attachments as attachment}
-											<div class="flex items-center gap-2 bg-exo-dark-gray/60 border border-exo-yellow/20 rounded px-2 py-1 text-xs font-mono">
+											<div class="flex items-center gap-2 bg-vgd-dark-gray/60 border border-vgd-yellow/20 rounded px-2 py-1 text-xs font-mono">
 												{#if attachment.type === 'image' && attachment.preview}
 													<img 
 														src={attachment.preview} 
 														alt={attachment.name}
-														class="w-12 h-12 object-cover rounded border border-exo-yellow/20"
+														class="w-12 h-12 object-cover rounded border border-vgd-yellow/20"
 													/>
 												{:else}
 													<span>{getAttachmentIcon(attachment)}</span>
 												{/if}
-												<span class="text-exo-yellow" title={attachment.name}>{truncateName(attachment.name)}</span>
+												<span class="text-vgd-yellow" title={attachment.name}>{truncateName(attachment.name)}</span>
 											</div>
 										{/each}
 									</div>
@@ -331,10 +331,10 @@ function isThinkingExpanded(messageId: string): boolean {
 							<!-- Assistant message styling -->
 							<div class="p-3 sm:p-4">
 								{#if message.thinking && message.thinking.trim().length > 0}
-									<div class="mb-3 rounded border border-exo-yellow/20 bg-exo-black/40">
+									<div class="mb-3 rounded border border-vgd-yellow/20 bg-vgd-black/40">
 										<button
 											type="button"
-											class="w-full flex items-center justify-between px-3 py-2 text-xs font-mono uppercase tracking-[0.2em] text-exo-light-gray/80 hover:text-exo-yellow transition-colors cursor-pointer"
+											class="w-full flex items-center justify-between px-3 py-2 text-xs font-mono uppercase tracking-[0.2em] text-vgd-light-gray/80 hover:text-vgd-yellow transition-colors cursor-pointer"
 											onclick={() => toggleThinkingVisibility(message.id)}
 											aria-expanded={isThinkingExpanded(message.id)}
 											aria-controls={`thinking-panel-${message.id}`}
@@ -351,14 +351,14 @@ function isThinkingExpanded(messageId: string): boolean {
 												</svg>
 												<span>Thinking...</span>
 											</span>
-											<span class="text-[10px] tracking-[0.2em] text-exo-light-gray/60 ml-4">
+											<span class="text-[10px] tracking-[0.2em] text-vgd-light-gray/60 ml-4">
 												{isThinkingExpanded(message.id) ? 'HIDE' : 'SHOW'}
 											</span>
 										</button>
 										{#if isThinkingExpanded(message.id)}
 											<div
 												id={`thinking-panel-${message.id}`}
-												class="px-3 pb-3 text-xs text-exo-light-gray/90 font-mono whitespace-pre-wrap break-words leading-relaxed"
+												class="px-3 pb-3 text-xs text-vgd-light-gray/90 font-mono whitespace-pre-wrap break-words leading-relaxed"
 											>
 												{message.thinking.trim()}
 											</div>
@@ -368,7 +368,7 @@ function isThinkingExpanded(messageId: string): boolean {
 								<div class="text-xs text-foreground">
 									<MarkdownContent content={message.content || (loading ? response : '')} />
 									{#if loading && !message.content}
-										<span class="inline-block w-2 h-4 bg-exo-yellow/70 ml-1 cursor-blink"></span>
+										<span class="inline-block w-2 h-4 bg-vgd-yellow/70 ml-1 cursor-blink"></span>
 									{/if}
 								</div>
 							</div>
@@ -380,7 +380,7 @@ function isThinkingExpanded(messageId: string): boolean {
 						<!-- Copy button -->
 						<button
 							onclick={() => handleCopy(message.content, message.id)}
-							class="p-1.5 text-exo-light-gray hover:text-exo-yellow transition-colors rounded cursor-pointer"
+							class="p-1.5 text-vgd-light-gray hover:text-vgd-yellow transition-colors rounded cursor-pointer"
 							title="Copy message"
 						>
 							{#if copiedMessageId === message.id}
@@ -398,7 +398,7 @@ function isThinkingExpanded(messageId: string): boolean {
 						{#if message.role === 'user'}
 							<button
 								onclick={() => handleStartEdit(message.id, message.content)}
-								class="p-1.5 text-exo-light-gray hover:text-exo-yellow transition-colors rounded cursor-pointer"
+								class="p-1.5 text-vgd-light-gray hover:text-vgd-yellow transition-colors rounded cursor-pointer"
 								title="Edit message"
 							>
 								<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -411,7 +411,7 @@ function isThinkingExpanded(messageId: string): boolean {
 						{#if message.role === 'assistant' && isLastAssistantMessage(message.id) && !loading}
 							<button
 								onclick={handleRegenerate}
-								class="p-1.5 text-exo-light-gray hover:text-exo-yellow transition-colors rounded cursor-pointer"
+								class="p-1.5 text-vgd-light-gray hover:text-vgd-yellow transition-colors rounded cursor-pointer"
 								title="Regenerate response"
 							>
 								<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -423,7 +423,7 @@ function isThinkingExpanded(messageId: string): boolean {
 						<!-- Delete button -->
 						<button
 							onclick={() => handleDeleteClick(message.id)}
-							class="p-1.5 text-exo-light-gray hover:text-red-400 transition-colors rounded hover:bg-red-500/10 cursor-pointer"
+							class="p-1.5 text-vgd-light-gray hover:text-red-400 transition-colors rounded hover:bg-red-500/10 cursor-pointer"
 							title="Delete message"
 						>
 							<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -438,13 +438,13 @@ function isThinkingExpanded(messageId: string): boolean {
 	
 	{#if messageList.length === 0}
 		<div class="flex-1 flex flex-col items-center justify-center text-center pt-[20vh]">
-			<div class="w-12 h-12 sm:w-16 sm:h-16 border border-exo-yellow/20 rounded-full flex items-center justify-center mb-3 sm:mb-4">
-				<div class="w-6 h-6 sm:w-8 sm:h-8 border border-exo-yellow/40 rounded-full flex items-center justify-center">
-					<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-exo-yellow/60 rounded-full"></div>
+			<div class="w-12 h-12 sm:w-16 sm:h-16 border border-vgd-yellow/20 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+				<div class="w-6 h-6 sm:w-8 sm:h-8 border border-vgd-yellow/40 rounded-full flex items-center justify-center">
+					<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-vgd-yellow/60 rounded-full"></div>
 				</div>
 			</div>
-			<p class="text-xs sm:text-sm text-exo-light-gray tracking-[0.15em] sm:tracking-[0.2em] uppercase">AWAITING INPUT</p>
-			<p class="text-sm sm:text-xs text-exo-light-gray tracking-wider mt-1">ENTER A QUERY TO BEGIN</p>
+			<p class="text-xs sm:text-sm text-vgd-light-gray tracking-[0.15em] sm:tracking-[0.2em] uppercase">AWAITING INPUT</p>
+			<p class="text-sm sm:text-xs text-vgd-light-gray tracking-wider mt-1">ENTER A QUERY TO BEGIN</p>
 		</div>
 	{/if}
 	
@@ -456,7 +456,7 @@ function isThinkingExpanded(messageId: string): boolean {
 		<button
 			type="button"
 			onclick={scrollToBottom}
-			class="sticky bottom-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-exo-dark-gray/90 border border-exo-medium-gray/50 flex items-center justify-center text-exo-light-gray hover:text-exo-yellow hover:border-exo-yellow/50 transition-all shadow-lg cursor-pointer z-10"
+			class="sticky bottom-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-vgd-dark-gray/90 border border-vgd-medium-gray/50 flex items-center justify-center text-vgd-light-gray hover:text-vgd-yellow hover:border-vgd-yellow/50 transition-all shadow-lg cursor-pointer z-10"
 			title="Scroll to bottom"
 		>
 			<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

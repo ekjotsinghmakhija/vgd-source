@@ -1,8 +1,8 @@
-# EXO API – Technical Reference
+# VGD API – Technical Reference
 
-This document describes the REST API exposed by the **EXO ** service, as implemented in:
+This document describes the REST API exposed by the **VGD ** service, as implemented in:
 
-`src/exo/master/api.py`
+`src/vgd/master/api.py`
 
 The API is used to manage model instances in the cluster, inspect cluster state, and perform inference using an OpenAI-compatible interface.
 
@@ -207,6 +207,6 @@ POST    /bench/chat/completions
 
 ## 6. Notes
 
-* The `/v1/chat/completions` endpoint is compatible with the OpenAI API format, so existing OpenAI clients can be pointed to EXO by changing the base URL.
+* The `/v1/chat/completions` endpoint is compatible with the OpenAI API format, so existing OpenAI clients can be pointed to VGD by changing the base URL.
 * The instance placement endpoints allow you to plan and preview cluster allocations before actually creating instances.
 * The `/events` and `/state` endpoints are primarily intended for operational visibility and debugging.

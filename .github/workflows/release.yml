@@ -20,7 +20,6 @@ jobs:
           enable-cache: true
       - run: uv python install
 
-      # Build Dashboard
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
       - run: |
@@ -28,10 +27,8 @@ jobs:
           npm ci
           npm run build
 
-      # Build Wheel & Sdist
       - run: uv build
 
-      # Upload to Release
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
@@ -52,9 +49,7 @@ jobs:
       - run: uv python install 3.12
 
       - name: Install System Dependencies
-        run: |
-          brew install macmon
-          brew install create-dmg
+        run: brew install macmon
 
       - run: |
           cd dashboard
@@ -67,21 +62,31 @@ jobs:
 
       - name: Build App with PyInstaller
         run: |
+          # Build the app
           uv run pyinstaller --clean --noconfirm packaging/pyinstaller/vgd.spec
+
+          # Handle renaming if the spec still outputs Exo.app
           if [ -d "dist/Exo.app" ]; then
             mv "dist/Exo.app" "dist/VGD.app"
           fi
 
-      # Simplified DMG Creation (Removes fragile UI layout commands)
-      - name: Create DMG
+          # Debug: Verify app exists
+          ls -R dist/VGD.app/Contents/MacOS/
+
+      - name: Create DMG (Robust Method)
         run: |
-          create-dmg \
-            --volname "VGD Installer" \
-            --window-pos 200 120 \
-            --window-size 800 400 \
-            --hide-extension "VGD.app" \
-            "dist/VGD-${{ github.ref_name }}-macos-arm64.dmg" \
-            "dist/VGD.app"
+          # 1. Prepare a folder for the DMG content
+          mkdir -p dist/dmg_root
+          cp -r "dist/VGD.app" dist/dmg_root/
+
+          # 2. Add a symlink to /Applications for easy drag-and-drop
+          ln -s /Applications dist/dmg_root/Applications
+
+          # 3. Create the DMG using native hdiutil
+          hdiutil create -volname "VGD Installer" \
+            -srcfolder dist/dmg_root \
+            -ov -format UDZO \
+            "dist/VGD-${{ github.ref_name }}-macos-arm64.dmg"
 
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')

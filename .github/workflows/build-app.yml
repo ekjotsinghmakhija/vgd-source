@@ -1,15 +1,10 @@
 name: Build VGD macOS DMG
 
 # Release workflow:
-# 1. Create a draft GitHub Release with the tag name (e.g. v1.0.0) and write release notes in markdown
+# 1. Create a draft GitHub Release with the tag name (e.g. v1.0.0) and write release notes.
 # 2. Push the tag: git tag v1.0.0 && git push origin v1.0.0
-# 3. This workflow builds, signs, and notarizes the DMG
-# 4. Release notes are embedded in appcast.xml for Sparkle (rendered as markdown)
-# 5. DMG and appcast.xml are uploaded to S3
-# 6. The draft GitHub Release is published with the DMG attached
-#
-# For alpha releases (e.g. v1.0.0-alpha.1): draft release and notes are optional.
-# If no draft exists, a release is auto-created with generated notes.
+# 3. This workflow builds, signs, and notarizes the DMG.
+# 4. The DMG is uploaded directly to the GitHub Release.
 
 on:
   workflow_dispatch:
@@ -21,19 +16,16 @@ on:
 
 jobs:
   build-macos-app:
-    runs-on: "macos-26"
+    runs-on: "macos-14" # Using standard Apple Silicon runner
     permissions:
       contents: write
     env:
+      # S3 and AWS variables removed
       SPARKLE_VERSION: 2.9.0-beta.1
-      SPARKLE_DOWNLOAD_PREFIX: ${{ secrets.SPARKLE_DOWNLOAD_PREFIX }}
       SPARKLE_FEED_URL: ${{ secrets.SPARKLE_FEED_URL }}
       SPARKLE_ED25519_PUBLIC: ${{ secrets.SPARKLE_ED25519_PUBLIC }}
       SPARKLE_ED25519_PRIVATE: ${{ secrets.SPARKLE_ED25519_PRIVATE }}
-      SPARKLE_S3_BUCKET: ${{ secrets.SPARKLE_S3_BUCKET }}
-      SPARKLE_S3_PREFIX: ${{ secrets.SPARKLE_S3_PREFIX }}
       VGD_BUG_REPORT_PRESIGNED_URL_ENDPOINT: ${{ secrets.VGD_BUG_REPORT_PRESIGNED_URL_ENDPOINT }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
       VGD_BUILD_NUMBER: ${{ github.run_number }}
       VGD_LIBP2P_NAMESPACE: ${{ github.ref_name }}
 
@@ -65,34 +57,26 @@ jobs:
       - name: Compute build version from semver
         run: |
           VERSION="$RELEASE_VERSION"
-          # Extract major.minor.patch (strip prerelease suffix)
           BASE_VERSION="${VERSION%%-*}"
           MAJOR=$(echo "$BASE_VERSION" | cut -d. -f1)
           MINOR=$(echo "$BASE_VERSION" | cut -d. -f2)
           PATCH=$(echo "$BASE_VERSION" | cut -d. -f3)
 
-          # Extract prerelease number (e.g., "alpha.2" -> 2, or 999 for releases)
           if [[ "$VERSION" == *-* ]]; then
             PRERELEASE_PART="${VERSION#*-}"
             PRERELEASE_NUM="${PRERELEASE_PART##*.}"
-            # Default to 0 if not a number
-            if ! [[ "$PRERELEASE_NUM" =~ ^[0-9]+$ ]]; then
-              PRERELEASE_NUM=0
-            fi
+            if ! [[ "$PRERELEASE_NUM" =~ ^[0-9]+$ ]]; then PRERELEASE_NUM=0; fi
           else
             PRERELEASE_NUM=999
           fi
 
-          # Compute: PRERELEASE + (1000 * PATCH) + (1_000_000 * MINOR) + (1_000_000_000 * MAJOR)
           BUILD_VERSION=$((PRERELEASE_NUM + 1000 * PATCH + 1000000 * MINOR + 1000000000 * MAJOR))
           echo "VGD_BUILD_VERSION=$BUILD_VERSION" >> $GITHUB_ENV
-          echo "Computed build version: $BUILD_VERSION from $VERSION"
 
       - name: Ensure tag commit is on main
         if: github.ref_type == 'tag'
         run: |
           git fetch origin main
-          # Alpha tags can be on any branch, production tags must be on main
           if [[ "$IS_ALPHA" == "true" ]]; then
             echo "Alpha tag detected, skipping main branch check"
           elif ! git merge-base --is-ancestor origin/main HEAD; then
@@ -105,44 +89,37 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Find draft release by name using gh release list (more reliable with default token)
           echo "Looking for draft release named '$GITHUB_REF_NAME'..."
-          DRAFT_EXISTS=$(gh release list --json name,isDraft --jq ".[] | select(.isDraft == true) | select(.name == \"$GITHUB_REF_NAME\") | .name" 2>/dev/null || echo "")
+          # Fix: Handle multiple drafts by taking the head
+          DRAFT_EXISTS=$(gh release list --json name,isDraft --jq ".[] | select(.isDraft == true) | select(.name == \"$GITHUB_REF_NAME\") | .name" 2>/dev/null | head -n 1 || echo "")
 
           if [[ -z "$DRAFT_EXISTS" ]]; then
             if [[ "$IS_ALPHA" == "true" ]]; then
-              echo "No draft release found for alpha tag $GITHUB_REF_NAME (optional for alphas)"
               echo "HAS_RELEASE_NOTES=false" >> $GITHUB_ENV
               exit 0
             fi
             echo "ERROR: No draft release found for tag $GITHUB_REF_NAME"
-            echo "Please create a draft release with release notes before pushing the tag."
+            echo "Please create a draft release on GitHub UI with release notes before pushing the tag."
             exit 1
           fi
 
-          # Fetch full release details via API to get body and ID
           echo "Found draft release, fetching details..."
-          RELEASE_JSON=$(gh api repos/${{ github.repository }}/releases --jq ".[] | select(.draft == true) | select(.name == \"$GITHUB_REF_NAME\")" 2>/dev/null || echo "")
+          # Fix: Use 'first' to prevent multiple objects returning
+          RELEASE_JSON=$(gh api repos/${{ github.repository }}/releases --jq "[.[] | select(.draft == true) | select(.name == \"$GITHUB_REF_NAME\")] | first" 2>/dev/null || echo "")
 
-          # Extract release notes
           NOTES=$(echo "$RELEASE_JSON" | jq -r '.body // ""')
           if [[ -z "$NOTES" || "$NOTES" == "null" ]]; then
-            if [[ "$IS_ALPHA" == "true" ]]; then
-              echo "Draft release has no notes (optional for alphas)"
-              echo "HAS_RELEASE_NOTES=false" >> $GITHUB_ENV
-              exit 0
-            fi
             echo "ERROR: Draft release exists but has no release notes"
-            echo "Please add release notes to the draft release before pushing the tag."
             exit 1
           fi
 
-          # Save release ID for later publishing
           RELEASE_ID=$(echo "$RELEASE_JSON" | jq -r '.id')
+          # Fix: Clean ID to remove whitespace/newlines
+          RELEASE_ID=$(echo "$RELEASE_ID" | tr -d '[:space:]')
+
           echo "DRAFT_RELEASE_ID=$RELEASE_ID" >> $GITHUB_ENV
           echo "HAS_RELEASE_NOTES=true" >> $GITHUB_ENV
 
-          echo "Found draft release (ID: $RELEASE_ID), saving release notes..."
           echo "$NOTES" > /tmp/release_notes.md
           echo "RELEASE_NOTES_FILE=/tmp/release_notes.md" >> $GITHUB_ENV
 
@@ -150,22 +127,17 @@ jobs:
       # Install dependencies
       # ============================================================
 
-      - name: Select Xcode 26.2
+      - name: Select Xcode 15+
         run: |
-          sudo xcode-select -s /Applications/Xcode_26.2.app
-          if ! xcrun -f metal >/dev/null 2>&1; then
-            echo "Metal toolchain is not installed."
-            exit 1
-          fi
+          sudo xcode-select -s /Applications/Xcode_15.4.app || sudo xcode-select -r
 
       - name: Install Homebrew packages
         run: brew install just awscli macmon
 
       - name: Install UV
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-          cache-dependency-glob: uv.lock
 
       - name: Setup Python
         run: |
@@ -177,12 +149,6 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
-      - name: Configure Cachix
-        uses: cachix/cachix-action@v14
-        with:
-          name: vgd
-          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-
       - name: Build dashboard
         run: |
           DASHBOARD_OUT=$(nix build .#dashboard --print-build-logs --no-link --print-out-paths)
@@ -192,7 +158,6 @@ jobs:
       - name: Install Sparkle CLI
         run: |
           CLI_URL="${SPARKLE_CLI_URL:-https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz}"
-          echo "Downloading Sparkle CLI from: $CLI_URL"
           mkdir -p /tmp/sparkle
           curl --fail --location --output /tmp/sparkle.tar.xz "$CLI_URL"
           tar -xJf /tmp/sparkle.tar.xz -C /tmp/sparkle --strip-components=1
@@ -205,38 +170,18 @@ jobs:
           PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
         run: |
           KEYCHAIN_PATH="$HOME/Library/Keychains/build.keychain-db"
-
-          # Create fresh keychain
           security create-keychain -p "$MACOS_CERTIFICATE_PASSWORD" "$KEYCHAIN_PATH"
-
-          # Disable auto-lock (no timeout, no lock-on-sleep)
           security set-keychain-settings "$KEYCHAIN_PATH"
-
-          # Add to search list while preserving existing keychains
           security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
-
-          # Set as default and unlock
           security default-keychain -s "$KEYCHAIN_PATH"
           security unlock-keychain -p "$MACOS_CERTIFICATE_PASSWORD" "$KEYCHAIN_PATH"
-
-          # Import certificate with full access for codesign
           echo "$MACOS_CERTIFICATE" | base64 --decode > /tmp/cert.p12
           security import /tmp/cert.p12 -k "$KEYCHAIN_PATH" -P "$MACOS_CERTIFICATE_PASSWORD" \
             -T /usr/bin/codesign -T /usr/bin/security -T /usr/bin/productbuild
           rm /tmp/cert.p12
-
-          # Allow codesign to access the key without prompting
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_CERTIFICATE_PASSWORD" "$KEYCHAIN_PATH"
-
-          # Verify keychain is unlocked and identity is available
-          echo "Verifying signing identity..."
-          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
-
-          # Setup provisioning profile
           mkdir -p "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
           echo "$PROVISIONING_PROFILE" | base64 --decode > "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/VGD.provisionprofile"
-
-          # Export keychain path for other steps
           echo "BUILD_KEYCHAIN_PATH=$KEYCHAIN_PATH" >> $GITHUB_ENV
 
       # ============================================================
@@ -310,6 +255,7 @@ jobs:
           hdiutil create -volname "VGD" -srcfolder dmg-root -ov -format UDZO "$DMG_NAME"
           /usr/bin/codesign --force --timestamp --options runtime \
             --sign "$SIGNING_IDENTITY" "$DMG_NAME"
+
           if [[ -n "$APPLE_NOTARIZATION_USERNAME" ]]; then
             SUBMISSION_OUTPUT=$(xcrun notarytool submit "$DMG_NAME" \
               --apple-id "$APPLE_NOTARIZATION_USERNAME" \
@@ -317,45 +263,26 @@ jobs:
               --team-id "$APPLE_NOTARIZATION_TEAM" \
               --wait --timeout 15m 2>&1)
             echo "$SUBMISSION_OUTPUT"
-
             SUBMISSION_ID=$(echo "$SUBMISSION_OUTPUT" | awk 'tolower($1)=="id:" && $2 ~ /^[0-9a-fA-F-]+$/ {print $2; exit}')
             STATUS=$(echo "$SUBMISSION_OUTPUT" | awk 'tolower($1)=="status:" {print $2; exit}')
-
-            if [[ -n "$SUBMISSION_ID" ]]; then
-              xcrun notarytool log "$SUBMISSION_ID" \
-                --apple-id "$APPLE_NOTARIZATION_USERNAME" \
-                --password "$APPLE_NOTARIZATION_PASSWORD" \
-                --team-id "$APPLE_NOTARIZATION_TEAM" > notarization-log.txt || true
-              echo "===== Notarization Log ====="
-              cat notarization-log.txt
-              echo "============================"
-            fi
-
             if [[ "$STATUS" != "Accepted" ]]; then
-              echo "Notarization failed with status: ${STATUS:-Unknown}"
               exit 1
             fi
-
             xcrun stapler staple "$DMG_NAME"
           fi
 
       - name: Generate Sparkle appcast
         env:
-          SPARKLE_DOWNLOAD_PREFIX: ${{ env.SPARKLE_DOWNLOAD_PREFIX }}
           SPARKLE_ED25519_PRIVATE: ${{ secrets.SPARKLE_ED25519_PRIVATE }}
           IS_ALPHA: ${{ env.IS_ALPHA }}
         run: |
           set -euo pipefail
           cd output
-          DOWNLOAD_PREFIX="${SPARKLE_DOWNLOAD_PREFIX:-https://assets.vgdlabs.net}"
+          DOWNLOAD_PREFIX="https://github.com/${{ github.repository }}/releases/download/$GITHUB_REF_NAME"
           echo "$SPARKLE_ED25519_PRIVATE" > sparkle_ed25519.key
           chmod 600 sparkle_ed25519.key
-
           CHANNEL_FLAG=""
-          if [[ "$IS_ALPHA" == "true" ]]; then
-            CHANNEL_FLAG="--channel alpha"
-            echo "Generating appcast for alpha channel"
-          fi
+          if [[ "$IS_ALPHA" == "true" ]]; then CHANNEL_FLAG="--channel alpha"; fi
 
           $SPARKLE_BIN/generate_appcast \
             --ed-key-file sparkle_ed25519.key \
@@ -363,60 +290,15 @@ jobs:
             $CHANNEL_FLAG \
             .
 
-      - name: Inject release notes into appcast
-        if: github.ref_type == 'tag' && env.HAS_RELEASE_NOTES == 'true'
-        env:
-          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
-        run: |
-          # Inject markdown release notes with sparkle:format="markdown" (Sparkle 2.9+)
-          export NOTES=$(cat "$RELEASE_NOTES_FILE")
-
-          # Insert description after the enclosure tag for this version
-          awk '
-            /<enclosure[^>]*>/ && index($0, ENVIRON["RELEASE_VERSION"]) {
-              print
-              print "            <description sparkle:format=\"markdown\"><![CDATA["
-              print ENVIRON["NOTES"]
-              print "            ]]></description>"
-              next
-            }
-            { print }
-          ' output/appcast.xml > output/appcast.xml.tmp && mv output/appcast.xml.tmp output/appcast.xml
-
-          echo "Injected markdown release notes for version $RELEASE_VERSION"
-
       # ============================================================
       # Upload artifacts
       # ============================================================
 
-      - name: Upload DMG
+      - name: Upload DMG to Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: VGD-dmg-${{ env.RELEASE_VERSION }}
           path: output/VGD-${{ env.RELEASE_VERSION }}.dmg
-
-      - name: Upload to S3
-        if: env.SPARKLE_S3_BUCKET != '' && github.ref_type == 'tag'
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ env.AWS_REGION }}
-          SPARKLE_S3_BUCKET: ${{ env.SPARKLE_S3_BUCKET }}
-          SPARKLE_S3_PREFIX: ${{ env.SPARKLE_S3_PREFIX }}
-          IS_ALPHA: ${{ env.IS_ALPHA }}
-        run: |
-          set -euo pipefail
-          cd output
-          PREFIX="${SPARKLE_S3_PREFIX:-}"
-          if [[ -n "$PREFIX" && "${PREFIX: -1}" != "/" ]]; then
-            PREFIX="${PREFIX}/"
-          fi
-          DMG_NAME="VGD-${RELEASE_VERSION}.dmg"
-          aws s3 cp "$DMG_NAME" "s3://${SPARKLE_S3_BUCKET}/${PREFIX}${DMG_NAME}"
-          if [[ "$IS_ALPHA" != "true" ]]; then
-            aws s3 cp "$DMG_NAME" "s3://${SPARKLE_S3_BUCKET}/${PREFIX}VGD-latest.dmg"
-            aws s3 cp appcast.xml "s3://${SPARKLE_S3_BUCKET}/${PREFIX}appcast.xml" --content-type application/xml --cache-control no-cache
-          fi
 
       - name: Publish GitHub Release
         if: github.ref_type == 'tag'
@@ -424,19 +306,23 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           DMG_PATH="output/VGD-${RELEASE_VERSION}.dmg"
+          APPCAST_PATH="output/appcast.xml"
 
           if [[ "$HAS_RELEASE_NOTES" == "true" ]]; then
-            # Update the draft release with the tag and upload DMG
+            # Update the draft release: publish it and attach assets
             gh api --method PATCH "repos/${{ github.repository }}/releases/$DRAFT_RELEASE_ID" \
               -f tag_name="$GITHUB_REF_NAME" \
               -F draft=false
+
             gh release upload "$GITHUB_REF_NAME" "$DMG_PATH" --clobber
-            echo "Published release $GITHUB_REF_NAME with DMG attached"
+            gh release upload "$GITHUB_REF_NAME" "$APPCAST_PATH" --clobber
+
+            echo "✅ Published release $GITHUB_REF_NAME with DMG attached"
           else
-            # Alpha without draft release - create one with auto-generated notes
-            gh release create "$GITHUB_REF_NAME" "$DMG_PATH" \
+            # Fallback for alpha releases without drafts
+            gh release create "$GITHUB_REF_NAME" "$DMG_PATH" "$APPCAST_PATH" \
               --title "$GITHUB_REF_NAME" \
               --generate-notes \
               --prerelease
-            echo "Created alpha release $GITHUB_REF_NAME with auto-generated notes"
+            echo "✅ Created alpha release $GITHUB_REF_NAME"
           fi

@@ -9,86 +9,135 @@ permissions:
   contents: write
 
 jobs:
-  # 1. Build Linux/Python Artifacts
-  build-python:
-    name: Build Python Package (Linux)
+  # ------------------------------------------------------------------
+  # JOB 1: Build Python Wheel & Source Distribution (Runs on Linux)
+  # ------------------------------------------------------------------
+  build-python-artifacts:
+    name: Build Wheel (Linux)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-      - run: uv python install
 
-      - uses: actions/setup-node@v4
+      - name: Set up Python
+        run: uv python install
+
+      - name: Build Dashboard
+        uses: actions/setup-node@v4
         with: { node-version: '20' }
       - run: |
-          cd dashboard
-          npm ci
-          npm run build
+          if [ -d "dashboard" ]; then
+            cd dashboard
+            npm ci
+            npm run build
+          else
+            echo "::warning::Dashboard directory not found, skipping build."
+          fi
 
-      - run: uv build
+      - name: Build Wheel and Sdist
+        run: uv build
 
-      - uses: softprops/action-gh-release@v1
+      - name: Upload Artifacts
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: dist/*
           draft: false
           prerelease: false
 
-  # 2. Build macOS Application (.dmg)
-  build-macos:
-    name: Build macOS App
+  # ------------------------------------------------------------------
+  # JOB 2: Build Standalone macOS App & DMG (Runs on macOS)
+  # ------------------------------------------------------------------
+  build-macos-app:
+    name: Build macOS DMG
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - run: uv python install 3.12
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Install System Dependencies
-        run: brew install macmon
+        run: |
+          brew install macmon
 
-      - run: |
-          cd dashboard
-          npm ci
-          npm run build
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Build Dashboard
+        uses: actions/setup-node@v4
+        with: { node-version: '20' }
       - run: |
+          if [ -d "dashboard" ]; then
+            cd dashboard
+            npm ci
+            npm run build
+          fi
+
+      - name: Install Python Dependencies
+        run: |
           uv sync --group dev
           uv pip install pyinstaller
 
-      - name: Build App with PyInstaller
+      # CRITICAL STEP: Locate Entry Point & Generate Clean Spec
+      # This ensures we get a .app bundle (windowed) named "VGD"
+      - name: Generate Spec & Build App
         run: |
-          # Build the app
-          uv run pyinstaller --clean --noconfirm packaging/pyinstaller/vgd.spec
-
-          # Handle renaming if the spec still outputs Exo.app
-          if [ -d "dist/Exo.app" ]; then
-            mv "dist/Exo.app" "dist/VGD.app"
+          # 1. Find the main entry point (handles both 'exo' and 'vgd' folder names)
+          if [ -f "src/vgd/main.py" ]; then
+            ENTRY_POINT="src/vgd/main.py"
+            echo "Found entry point at src/vgd/main.py"
+          elif [ -f "src/exo/main.py" ]; then
+            ENTRY_POINT="src/exo/main.py"
+            echo "Found entry point at src/exo/main.py"
+          else
+            echo "Error: Could not find main.py in src/vgd or src/exo"
+            exit 1
           fi
 
-          # Debug: Verify app exists
-          ls -R dist/VGD.app/Contents/MacOS/
+          # 2. Generate a fresh spec file explicitly for a windowed macOS app
+          # --windowed: Creates .app bundle
+          # --name VGD: Forces the output name to be VGD.app
+          # --noconfirm: Overwrites existing spec
+          uv run pyi-makespec --name "VGD" --windowed --onedir --clean --noconfirm "$ENTRY_POINT"
 
-      - name: Create DMG (Robust Method)
+          # 3. Run PyInstaller
+          uv run pyinstaller --clean --noconfirm VGD.spec
+
+          # 4. Verify Build
+          if [ -d "dist/VGD.app" ]; then
+            echo "✅ Build Successful: dist/VGD.app created."
+          else
+            echo "❌ Build Failed: dist/VGD.app not found."
+            ls -R dist/
+            exit 1
+          fi
+
+      - name: Package into DMG
         run: |
-          # 1. Prepare a folder for the DMG content
+          # Create a clean folder for DMG contents
           mkdir -p dist/dmg_root
           cp -r "dist/VGD.app" dist/dmg_root/
 
-          # 2. Add a symlink to /Applications for easy drag-and-drop
+          # Create symlink to Applications
           ln -s /Applications dist/dmg_root/Applications
 
-          # 3. Create the DMG using native hdiutil
+          # Use hdiutil (Native macOS tool, reliable)
           hdiutil create -volname "VGD Installer" \
             -srcfolder dist/dmg_root \
             -ov -format UDZO \
             "dist/VGD-${{ github.ref_name }}-macos-arm64.dmg"
 
-      - uses: softprops/action-gh-release@v1
+      - name: Upload DMG
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: dist/*.dmg

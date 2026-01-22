@@ -22,7 +22,7 @@ jobs:
 
       - run: uv python install
 
-      # Build Dashboard so it is included in the python package
+      # Build Dashboard
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
       - run: |
@@ -48,11 +48,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Setup Python 3.12 (Standard for macOS builds)
+      # Setup Python 3.12
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
       - run: uv python install 3.12
+
+      # Install System Dependencies (Fixes macmon error)
+      - name: Install System Dependencies
+        run: |
+          brew install macmon
+          brew install create-dmg
 
       # Build Dashboard
       - uses: actions/setup-node@v4
@@ -73,16 +79,14 @@ jobs:
           # Use uv run to ensure we use the virtual environment
           uv run pyinstaller --clean --noconfirm packaging/pyinstaller/vgd.spec
 
-          # Rename output to VGD
+          # Rename output to VGD if needed (spec file likely handles this now, but safety check)
           if [ -d "dist/Exo.app" ]; then
-            mv "dist/VGD.app" "dist/VGD.app"
+            mv "dist/Exo.app" "dist/VGD.app"
           fi
 
       # Create DMG Installer
       - name: Create DMG
         run: |
-          brew install create-dmg
-
           create-dmg \
             --volname "VGD Installer" \
             --window-pos 200 120 \

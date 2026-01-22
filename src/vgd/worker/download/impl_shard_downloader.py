@@ -3,8 +3,9 @@ from collections.abc import Awaitable
 from pathlib import Path
 from typing import AsyncIterator, Callable
 
-from vgd.shared.models.model_cards import MODEL_CARDS
-from vgd.shared.models.model_meta import get_model_card
+from loguru import logger
+
+from vgd.shared.models.model_cards import MODEL_CARDS, ModelCard, ModelId
 from vgd.shared.types.worker.shards import (
     PipelineShardMetadata,
     ShardMetadata,
@@ -19,8 +20,8 @@ def vgd_shard_downloader(max_parallel_downloads: int = 8) -> ShardDownloader:
     )
 
 
-async def build_base_shard(model_id: str) -> ShardMetadata:
-    model_card = await get_model_card(model_id)
+async def build_base_shard(model_id: ModelId) -> ShardMetadata:
+    model_card = await ModelCard.load(model_id)
     return PipelineShardMetadata(
         model_card=model_card,
         device_rank=0,
@@ -31,7 +32,7 @@ async def build_base_shard(model_id: str) -> ShardMetadata:
     )
 
 
-async def build_full_shard(model_id: str) -> PipelineShardMetadata:
+async def build_full_shard(model_id: ModelId) -> PipelineShardMetadata:
     base_shard = await build_base_shard(model_id)
     return PipelineShardMetadata(
         model_card=base_shard.model_card,
@@ -147,18 +148,14 @@ class ResumableShardDownloader(ShardDownloader):
     async def get_shard_download_status(
         self,
     ) -> AsyncIterator[tuple[Path, RepoDownloadProgress]]:
-        # Limit parallel checks to 3 to prevent timeouts
-        semaphore = asyncio.Semaphore(3)
-
         async def _status_for_model(
-            model_id: str,
+            model_id: ModelId,
         ) -> tuple[Path, RepoDownloadProgress]:
-            async with semaphore:
-                """Helper coroutine that builds the shard for a model and gets its download status."""
-                shard = await build_full_shard(model_id)
-                return await download_shard(
-                    shard, self.on_progress_wrapper, skip_download=True
-                )
+            """Helper coroutine that builds the shard for a model and gets its download status."""
+            shard = await build_full_shard(model_id)
+            return await download_shard(
+                shard, self.on_progress_wrapper, skip_download=True
+            )
 
         # Kick off download status coroutines concurrently
         tasks = [
@@ -171,7 +168,7 @@ class ResumableShardDownloader(ShardDownloader):
                 yield await task
             # TODO: except Exception
             except Exception as e:
-                print("Error downloading shard:", e)
+                logger.error("Error downloading shard:", e)
 
     async def get_shard_download_status_for_shard(
         self, shard: ShardMetadata

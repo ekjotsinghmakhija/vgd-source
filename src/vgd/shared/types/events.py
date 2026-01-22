@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import Field
 
 from vgd.shared.topology import Connection
-from vgd.shared.types.chunks import GenerationChunk
+from vgd.shared.types.chunks import GenerationChunk, InputImageChunk
 from vgd.shared.types.common import CommandId, Id, NodeId, SessionId
 from vgd.shared.types.tasks import Task, TaskId, TaskStatus
 from vgd.shared.types.worker.downloads import DownloadProgress
@@ -96,6 +96,11 @@ class ChunkGenerated(BaseEvent):
     chunk: GenerationChunk
 
 
+class InputChunkReceived(BaseEvent):
+    command_id: CommandId
+    chunk: InputImageChunk
+
+
 class TopologyEdgeCreated(BaseEvent):
     conn: Connection
 
@@ -119,6 +124,7 @@ Event = (
     | NodeGatheredInfo
     | NodeDownloadProgress
     | ChunkGenerated
+    | InputChunkReceived
     | TopologyEdgeCreated
     | TopologyEdgeDeleted
 )

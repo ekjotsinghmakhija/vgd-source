@@ -41,7 +41,7 @@
       # Common arguments for all Rust builds
       commonArgs = {
         inherit src;
-        pname = "vgd-rust";
+        pname = "exo-rust";
         version = "0.0.1";
         strictDeps = true;
 
@@ -82,11 +82,11 @@
       config = {
         packages = {
           # Python bindings wheel via maturin
-          vgd_pyo3_bindings = craneLib.buildPackage (
+          exo_pyo3_bindings = craneLib.buildPackage (
             commonArgs
             // {
               inherit cargoArtifacts;
-              pname = "vgd_pyo3_bindings";
+              pname = "exo_pyo3_bindings";
 
               nativeBuildInputs = commonArgs.nativeBuildInputs ++ [
                 pkgs.maturin
@@ -96,7 +96,7 @@
                 maturin build \
                   --release \
                   --manylinux off \
-                  --manifest-path rust/vgd_pyo3_bindings/Cargo.toml \
+                  --manifest-path rust/exo_pyo3_bindings/Cargo.toml \
                   --features "pyo3/extension-module,pyo3/experimental-async" \
                   --interpreter ${pkgs.python313}/bin/python \
                   --out dist

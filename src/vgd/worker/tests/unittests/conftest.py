@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from vgd.shared.models.model_cards import ModelCard, ModelId
+from vgd.shared.models.model_cards import ModelCard, ModelId, ModelTask
 from vgd.shared.types.common import NodeId
 from vgd.shared.types.memory import Memory
 from vgd.shared.types.tasks import BaseTask, TaskId
@@ -38,6 +38,7 @@ def get_pipeline_shard_metadata(
             n_layers=32,
             hidden_size=2048,
             supports_tensor=False,
+            tasks=[ModelTask.TextGeneration],
         ),
         device_rank=device_rank,
         world_size=world_size,

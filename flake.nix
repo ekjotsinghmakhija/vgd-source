@@ -1,5 +1,5 @@
 {
-  description = "The development environment for Vgd";
+  description = "The development environment for Exo";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -31,8 +31,8 @@
   };
 
   nixConfig = {
-    extra-trusted-public-keys = "vgd.cachix.org-1:okq7hl624TBeAR3kV+g39dUFSiaZgLRkLsFBCuJ2NZI=";
-    extra-substituters = "https://vgd.cachix.org";
+    extra-trusted-public-keys = "exo.cachix.org-1:okq7hl624TBeAR3kV+g39dUFSiaZgLRkLsFBCuJ2NZI=";
+    extra-substituters = "https://exo.cachix.org";
   };
 
   outputs =
@@ -64,7 +64,7 @@
               nixpkgs-fmt.enable = true;
               ruff-format = {
                 enable = true;
-                excludes = [ "rust/vgd_pyo3_bindings/vgd_pyo3_bindings.pyi" ];
+                excludes = [ "rust/exo_pyo3_bindings/exo_pyo3_bindings.pyi" ];
               };
               rustfmt = {
                 enable = true;
@@ -72,7 +72,8 @@
               };
               prettier = {
                 enable = true;
-                includes = [ "*.ts" ];
+                package = self'.packages.prettier-svelte;
+                includes = [ "*.ts" "*.svelte" ];
               };
               swift-format = {
                 enable = true;

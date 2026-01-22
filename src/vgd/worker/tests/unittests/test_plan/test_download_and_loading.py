@@ -1,6 +1,5 @@
 import vgd.worker.plan as plan_mod
-from vgd.shared.models.model_cards import ModelId
-from vgd.shared.types.common import NodeId
+from vgd.shared.types.common import ModelId, NodeId
 from vgd.shared.types.memory import Memory
 from vgd.shared.types.tasks import LoadModel
 from vgd.shared.types.worker.downloads import DownloadCompleted, DownloadProgress

@@ -29,7 +29,7 @@ build-dashboard:
     npm run build
 
 package:
-    uv run pyinstaller packaging/pyinstaller/vgd.spec
+    uv run pyinstaller packaging/pyinstaller/exo.spec
 
 clean:
     rm -rf **/__pycache__

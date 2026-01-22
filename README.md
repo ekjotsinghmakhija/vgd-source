@@ -5,10 +5,11 @@
   <img alt="vgd logo" src="/docs/imgs/vgd-logo-transparent.png" width="50%" height="50%">
 </picture>
 
-vgd: Run your own AI cluster at home with everyday devices. Maintained by [vgd labs](https://x.com/ek10sh).
+vgd: Run your own AI cluster at home with everyday devices. Maintained by [vgd labs](https://x.com/vgdlabs).
 
 <p align="center">
-  <a href="https://x.com/ek10sh" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/twitter/follow/vgdlabs?style=social" alt="X"></a>
+  <a href="https://discord.gg/TJ4P57arEm" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://x.com/vgdlabs" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/twitter/follow/vgdlabs?style=social" alt="X"></a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/License-Apache2.0-blue.svg" alt="License: Apache-2.0"></a>
 </p>
 
@@ -16,12 +17,12 @@ vgd: Run your own AI cluster at home with everyday devices. Maintained by [vgd l
 
 ---
 
-vgd connects all your devices into an AI cluster. Not only does vgd enable running models larger than would fit on a single device, but with [day-0 support for RDMA over Thunderbolt](https://x.com/ek10sh/status/2014001203965800934), makes models run faster as you add more devices.
+vgd connects all your devices into an AI cluster. Not only does vgd enable running models larger than would fit on a single device, but with [day-0 support for RDMA over Thunderbolt](https://x.com/vgdlabs/status/2001817749744476256?s=20), makes models run faster as you add more devices.
 
 ## Features
 
 - **Automatic Device Discovery**: Devices running vgd automatically discover each other - no manual configuration.
-- **RDMA over Thunderbolt**: vgd ships with [day-0 support for RDMA over Thunderbolt 5](https://x.com/ek10sh/status/2014001203965800934), enabling 99% reduction in latency between devices.
+- **RDMA over Thunderbolt**: vgd ships with [day-0 support for RDMA over Thunderbolt 5](https://x.com/vgdlabs/status/2001817749744476256?s=20), enabling 99% reduction in latency between devices.
 - **Topology-Aware Auto Parallel**: vgd figures out the best way to split your model across all available devices based on a realtime view of your device topology. It takes into account device resources and network latency/bandwidth between each link.
 - **Tensor Parallelism**: vgd supports sharding models, for up to 1.8x speedup on 2 devices and 3.2x speedup on 4 devices.
 - **MLX Support**: vgd uses [MLX](https://github.com/ml-explore/mlx) as an inference backend and [MLX distributed](https://ml-explore.github.io/mlx/build/html/usage/distributed.html) for distributed communication.
@@ -73,14 +74,14 @@ There are two ways to run vgd:
 
 **Prerequisites:**
 - [brew](https://github.com/Homebrew/brew) (for simple package management on macOS)
-
+  
   ```bash
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   ```
 - [uv](https://github.com/astral-sh/uv) (for Python dependency management)
 - [macmon](https://github.com/vladkens/macmon) (for hardware monitoring on Apple Silicon)
 - [node](https://github.com/nodejs/node) (for building the dashboard)
-
+  
   ```bash
   brew install uv macmon node
   ```
@@ -363,7 +364,7 @@ The `vgd-bench` tool measures model prefill and token generation speed across di
 
 ```bash
 uv run bench/vgd_bench.py \
-  --model llama-3.2-1b \
+  --model Llama-3.2-1B-Instruct-4bit \
   --pp 128,256,512 \
   --tg 128,256
 ```
@@ -384,7 +385,7 @@ uv run bench/vgd_bench.py \
 
 ```bash
 uv run bench/vgd_bench.py \
-  --model llama-3.2-1b \
+  --model Llama-3.2-1B-Instruct-4bit \
   --pp 128,512 \
   --tg 128 \
   --max-nodes 2 \

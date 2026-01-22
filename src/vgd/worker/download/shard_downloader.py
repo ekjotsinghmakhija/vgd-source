@@ -5,7 +5,7 @@ from datetime import timedelta
 from pathlib import Path
 from typing import AsyncIterator, Callable
 
-from vgd.shared.models.model_cards import ModelCard, ModelId
+from vgd.shared.models.model_cards import ModelCard, ModelId, ModelTask
 from vgd.shared.types.memory import Memory
 from vgd.shared.types.worker.shards import (
     PipelineShardMetadata,
@@ -92,6 +92,7 @@ NOOP_DOWNLOAD_PROGRESS = RepoDownloadProgress(
             n_layers=1,
             hidden_size=1,
             supports_tensor=False,
+            tasks=[ModelTask.TextGeneration],
         ),
         device_rank=0,
         world_size=1,

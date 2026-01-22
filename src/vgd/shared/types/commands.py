@@ -1,7 +1,12 @@
 from pydantic import Field
 
 from vgd.shared.models.model_cards import ModelCard
-from vgd.shared.types.api import ChatCompletionTaskParams
+from vgd.shared.types.api import (
+    ChatCompletionTaskParams,
+    ImageEditsInternalParams,
+    ImageGenerationTaskParams,
+)
+from vgd.shared.types.chunks import InputImageChunk
 from vgd.shared.types.common import CommandId, NodeId
 from vgd.shared.types.worker.instances import Instance, InstanceId, InstanceMeta
 from vgd.shared.types.worker.shards import Sharding
@@ -18,6 +23,14 @@ class TestCommand(BaseCommand):
 
 class ChatCompletion(BaseCommand):
     request_params: ChatCompletionTaskParams
+
+
+class ImageGeneration(BaseCommand):
+    request_params: ImageGenerationTaskParams
+
+
+class ImageEdits(BaseCommand):
+    request_params: ImageEditsInternalParams
 
 
 class PlaceInstance(BaseCommand):
@@ -39,6 +52,12 @@ class TaskFinished(BaseCommand):
     finished_command_id: CommandId
 
 
+class SendInputChunk(BaseCommand):
+    """Command to send an input image chunk (converted to event by master)."""
+
+    chunk: InputImageChunk
+
+
 class RequestEventLog(BaseCommand):
     since_idx: int
 
@@ -47,10 +66,13 @@ Command = (
     TestCommand
     | RequestEventLog
     | ChatCompletion
+    | ImageGeneration
+    | ImageEdits
     | PlaceInstance
     | CreateInstance
     | DeleteInstance
     | TaskFinished
+    | SendInputChunk
 )
 
 

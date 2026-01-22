@@ -12,14 +12,14 @@ from anyio import (
     sleep_forever,
 )
 from anyio.abc import TaskGroup
-from filelock import FileLock
-from loguru import logger
 from vgd_pyo3_bindings import (
     AllQueuesFullError,
     Keypair,
     NetworkingHandle,
     NoPeersSubscribedToTopicError,
 )
+from filelock import FileLock
+from loguru import logger
 
 from vgd.shared.constants import VGD_NODE_ID_KEYPAIR
 from vgd.utils.channels import Receiver, Sender, channel

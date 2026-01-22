@@ -15,7 +15,7 @@ digest.txt
 *.xcuserdata
 *.xcuserdatad/
 **/.DS_Store
-app/VGD/build/
+app/EXO/build/
 dist/
 
 

@@ -24,6 +24,10 @@ dependencies = [
     "hypercorn>=0.18.0",
     "openai-harmony>=0.0.8",
     "httpx>=0.28.1",
+    "tomlkit>=0.14.0",
+    "pillow>=11.0,<12.0", # compatibility with mflux
+    "mflux>=0.14.2",
+    "python-multipart>=0.0.21",
 ]
 
 [project.scripts]
@@ -71,6 +75,26 @@ build-backend = "uv_build"
 # type-checker configuration
 ###
 
+[tool.basedpyright]
+include = [".venv/lib/mlx", ".venv/lib/mlx_lm", "src", "bench"]
+typeCheckingMode = "strict"
+failOnWarnings = true
+
+reportAny = "error"
+reportUnknownVariableType = "error"
+reportUnknownParameterType = "error"
+reportMissingParameterType = "error"
+reportMissingTypeStubs = "error"
+reportInvalidCast = "error"
+reportUnnecessaryCast = "error"
+reportUnnecessaryTypeIgnoreComment = "error"
+
+pythonVersion = "3.13"
+pythonPlatform = "Darwin"
+
+exclude = ["**/.venv", "**/venv", "**/__pycache__", "**/vgd_scripts", "**/.direnv", "**/rust", "**/.github"]
+stubPath = ".mlx_typings"
+
 [[tool.basedpyright.executionEnvironments]]
 root = "src"
 
@@ -109,29 +133,3 @@ addopts = "-m 'not slow'"
 filterwarnings = [
     "ignore:builtin type Swig:DeprecationWarning",
 ]
-
-[tool.basedpyright]
-typeCheckingMode = "basic"
-exclude = [
-    "**/node_modules",
-    "**/__pycache__",
-    "tmp",
-    "**/tests",
-    ".mlx_typings"
-]
-# Disable all strict checks to ensure CI passes
-reportAny = false
-reportUnknownMemberType = false
-reportUnknownArgumentType = false
-reportUnknownVariableType = false
-reportMissingModuleSource = false
-reportMissingImports = false
-reportPrivateUsage = false
-reportIncompatibleMethodOverride = false
-reportUndefinedVariable = false
-reportAttributeAccessIssue = false
-reportGeneralTypeIssues = false
-reportCallIssue = false
-reportOperatorIssue = false
-reportInvalidTypeForm = false
-reportPossiblyUnboundVariable = false

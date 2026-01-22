@@ -83,11 +83,11 @@ class CustomMlxLayer(nn.Module):
 
     def __init__(self, original_layer: _LayerCallable):
         super().__init__()
-        object.__setattr__(self, "_original_layer", original_layer)
+        dict.__setitem__(self, "_original_layer", original_layer)  # pyright: ignore[reportUnknownMemberType]
 
     @property
     def original_layer(self) -> _LayerCallable:
-        return cast(_LayerCallable, object.__getattribute__(self, "_original_layer"))
+        return cast(_LayerCallable, self["_original_layer"])
 
     # Calls __getattr__ for any attributes not found on nn.Module (e.g. use_sliding)
     if not TYPE_CHECKING:
@@ -96,7 +96,7 @@ class CustomMlxLayer(nn.Module):
             try:
                 return super().__getattr__(name)
             except AttributeError:
-                original_layer = object.__getattribute__(self, "_original_layer")
+                original_layer = cast(_LayerCallable, self["_original_layer"])
                 return getattr(original_layer, name)
 
 
@@ -334,7 +334,7 @@ def tensor_auto_parallel(
         group=group,
     )
 
-    if hasattr(model, "shard"):
+    if hasattr(model, "shard") and not isinstance(model, GptOssModel):
         try:
             model.shard(group)  # type: ignore
             return patch_tensor_model(model)
@@ -383,7 +383,6 @@ def tensor_auto_parallel(
             all_to_sharded_linear_in_place,
             sharded_to_all_linear_in_place,
         )
-
     else:
         raise ValueError(f"Unsupported model type: {type(model)}")
 

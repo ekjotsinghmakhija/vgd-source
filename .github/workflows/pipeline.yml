@@ -20,7 +20,11 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
-      # Removed Cachix configuration here to prevent secrets error
+      - uses: cachix/cachix-action@v14
+        name: Configure Cachix
+        with:
+          name: vgd
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: Configure git user
         run: |
@@ -37,7 +41,7 @@ jobs:
       - name: Setup Nix Environment
         run: |
           echo "Checking for nix installation..."
-
+          
           # Check if nix binary exists directly
           if [ -f /nix/var/nix/profiles/default/bin/nix ]; then
             echo "Found nix binary at /nix/var/nix/profiles/default/bin/nix"
@@ -113,7 +117,11 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
-      # Removed Cachix configuration here
+      - uses: cachix/cachix-action@v14
+        name: Configure Cachix
+        with:
+          name: vgd
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: Build all Nix outputs
         run: |

@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>SUFeedURL</key>
-	<string>https://assets.vgdlabs.net/appcast.xml</string>
-	<key>VGDBuildTag</key>
-	<string>$(VGD_BUILD_TAG)</string>
-	<key>VGDBuildCommit</key>
-	<string>$(VGD_BUILD_COMMIT)</string>
-	<key>VGDBugReportPresignedUrlEndpoint</key>
-	<string>$(VGD_BUG_REPORT_PRESIGNED_URL_ENDPOINT)</string>
+	<string>https://assets.exolabs.net/appcast.xml</string>
+	<key>EXOBuildTag</key>
+	<string>$(EXO_BUILD_TAG)</string>
+	<key>EXOBuildCommit</key>
+	<string>$(EXO_BUILD_COMMIT)</string>
+	<key>EXOBugReportPresignedUrlEndpoint</key>
+	<string>$(EXO_BUG_REPORT_PRESIGNED_URL_ENDPOINT)</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>VGD needs local network access to discover and connect to other devices in your cluster for distributed AI inference.</string>
+	<string>EXO needs local network access to discover and connect to other devices in your cluster for distributed AI inference.</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_p2p._tcp</string>

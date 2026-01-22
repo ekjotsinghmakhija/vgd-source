@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E0140D0E2ED1F79A001F3171"
-               BuildableName = "VGD.app"
-               BlueprintName = "VGD"
-               ReferencedContainer = "container:VGD.xcodeproj">
+               BuildableName = "EXO.app"
+               BlueprintName = "EXO"
+               ReferencedContainer = "container:EXO.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E0140D1F2ED1F79B001F3171"
-               BuildableName = "VGDTests.xctest"
-               BlueprintName = "VGDTests"
-               ReferencedContainer = "container:VGD.xcodeproj">
+               BuildableName = "EXOTests.xctest"
+               BlueprintName = "EXOTests"
+               ReferencedContainer = "container:EXO.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E0140D292ED1F79B001F3171"
-               BuildableName = "VGDUITests.xctest"
-               BlueprintName = "VGDUITests"
-               ReferencedContainer = "container:VGD.xcodeproj">
+               BuildableName = "EXOUITests.xctest"
+               BlueprintName = "EXOUITests"
+               ReferencedContainer = "container:EXO.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -69,19 +69,19 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E0140D0E2ED1F79A001F3171"
-            BuildableName = "VGD.app"
-            BlueprintName = "VGD"
-            ReferencedContainer = "container:VGD.xcodeproj">
+            BuildableName = "EXO.app"
+            BlueprintName = "EXO"
+            ReferencedContainer = "container:EXO.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "VGD_BUG_AWS_ACCESS_KEY_ID"
+            key = "EXO_BUG_AWS_ACCESS_KEY_ID"
             value = "AKIAYEKP5EMXTOBYDGHX"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "VGD_BUG_AWS_SECRET_ACCESS_KEY"
+            key = "EXO_BUG_AWS_SECRET_ACCESS_KEY"
             value = "Ep5gIlUZ1o8ssTLQwmyy34yPGfTPEYQ4evE8NdPE"
             isEnabled = "YES">
          </EnvironmentVariable>
@@ -98,9 +98,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E0140D0E2ED1F79A001F3171"
-            BuildableName = "VGD.app"
-            BlueprintName = "VGD"
-            ReferencedContainer = "container:VGD.xcodeproj">
+            BuildableName = "EXO.app"
+            BlueprintName = "EXO"
+            ReferencedContainer = "container:EXO.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

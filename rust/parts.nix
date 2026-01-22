@@ -79,7 +79,8 @@
       config = {
         packages = {
           # Python bindings wheel via maturin
-          vgd_pyo3_bindings = craneLib.buildPackage ( # CHANGED: exo -> vgd
+          vgd_pyo3_bindings = craneLib.buildPackage (
+            # CHANGED: exo -> vgd
             commonArgs
             // {
               inherit cargoArtifacts;

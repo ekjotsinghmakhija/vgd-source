@@ -9,17 +9,15 @@ permissions:
   contents: write
 
 jobs:
-  # 1. Build Linux/Python Artifacts (Whl + Tar.gz)
+  # 1. Build Linux/Python Artifacts
   build-python:
     name: Build Python Package (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-
       - run: uv python install
 
       # Build Dashboard
@@ -48,57 +46,43 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Setup Python 3.12
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
       - run: uv python install 3.12
 
-      # Install System Dependencies (Fixes macmon error)
       - name: Install System Dependencies
         run: |
           brew install macmon
           brew install create-dmg
 
-      # Build Dashboard
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
       - run: |
           cd dashboard
           npm ci
           npm run build
 
-      # Install Dependencies & PyInstaller
       - run: |
           uv sync --group dev
           uv pip install pyinstaller
 
-      # Build the Standalone App
       - name: Build App with PyInstaller
         run: |
-          # Use uv run to ensure we use the virtual environment
           uv run pyinstaller --clean --noconfirm packaging/pyinstaller/vgd.spec
-
-          # Rename output to VGD if needed (spec file likely handles this now, but safety check)
           if [ -d "dist/Exo.app" ]; then
             mv "dist/Exo.app" "dist/VGD.app"
           fi
 
-      # Create DMG Installer
+      # Simplified DMG Creation (Removes fragile UI layout commands)
       - name: Create DMG
         run: |
           create-dmg \
             --volname "VGD Installer" \
             --window-pos 200 120 \
             --window-size 800 400 \
-            --icon-size 100 \
-            --icon "VGD.app" 200 190 \
             --hide-extension "VGD.app" \
-            --app-drop-link 600 185 \
             "dist/VGD-${{ github.ref_name }}-macos-arm64.dmg" \
             "dist/VGD.app"
 
-      # Upload DMG to Release
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:

@@ -71,11 +71,11 @@ jobs:
       - name: Build App with PyInstaller
         run: |
           # Use uv run to ensure we use the virtual environment
-          uv run pyinstaller --clean --noconfirm packaging/pyinstaller/exo.spec
+          uv run pyinstaller --clean --noconfirm packaging/pyinstaller/vgd.spec
 
           # Rename output to VGD
           if [ -d "dist/Exo.app" ]; then
-            mv "dist/Exo.app" "dist/VGD.app"
+            mv "dist/VGD.app" "dist/VGD.app"
           fi
 
       # Create DMG Installer

@@ -13,10 +13,8 @@
         "rust-src"
         "rust-analyzer"
       ];
-
       # Crane with fenix toolchain
       craneLib = (inputs.crane.mkLib pkgs).overrideToolchain rustToolchain;
-
       # Source filtering - only include rust/ directory and root Cargo files
       # This ensures changes to Python/docs/etc don't trigger Rust rebuilds
       src = lib.cleanSourceWith {
@@ -28,20 +26,22 @@
             parentDir = builtins.dirOf path;
             inRustDir =
               (lib.hasInfix "/rust/" path)
-              || (lib.hasSuffix "/rust" parentDir)
-              || (baseName == "rust" && type == "directory");
+              ||
+              (lib.hasSuffix "/rust" parentDir)
+              ||
+              (baseName == "rust" && type == "directory");
             isRootCargoFile =
               (baseName == "Cargo.toml" || baseName == "Cargo.lock")
               && (builtins.dirOf path == toString inputs.self);
           in
           isRootCargoFile
-          || (inRustDir && (craneLib.filterCargoSources path type || lib.hasSuffix ".toml" path || lib.hasSuffix ".md" path));
+          ||
+          (inRustDir && (craneLib.filterCargoSources path type || lib.hasSuffix ".toml" path || lib.hasSuffix ".md" path));
       };
-
       # Common arguments for all Rust builds
       commonArgs = {
         inherit src;
-        pname = "exo-rust";
+        pname = "vgd-rust"; # CHANGED: exo -> vgd
         version = "0.0.1";
         strictDeps = true;
 
@@ -49,12 +49,10 @@
           pkgs.pkg-config
           pkgs.python313 # Required for pyo3-build-config
         ];
-
         buildInputs = [
           pkgs.openssl
           pkgs.python313 # Required for pyo3 tests
         ];
-
         OPENSSL_NO_VENDOR = "1";
 
         # Required for pyo3 tests to find libpython
@@ -78,15 +76,14 @@
           description = "The Rust toolchain to use";
         };
       };
-
       config = {
         packages = {
           # Python bindings wheel via maturin
-          exo_pyo3_bindings = craneLib.buildPackage (
+          vgd_pyo3_bindings = craneLib.buildPackage ( # CHANGED: exo -> vgd
             commonArgs
             // {
               inherit cargoArtifacts;
-              pname = "exo_pyo3_bindings";
+              pname = "vgd_pyo3_bindings"; # CHANGED: exo -> vgd
 
               nativeBuildInputs = commonArgs.nativeBuildInputs ++ [
                 pkgs.maturin
@@ -96,11 +93,11 @@
                 maturin build \
                   --release \
                   --manylinux off \
-                  --manifest-path rust/exo_pyo3_bindings/Cargo.toml \
+                  --manifest-path rust/vgd_pyo3_bindings/Cargo.toml \
                   --features "pyo3/extension-module,pyo3/experimental-async" \
                   --interpreter ${pkgs.python313}/bin/python \
                   --out dist
-              '';
+              ''; # CHANGED: rust/exo... -> rust/vgd... above
 
               # Don't use crane's default install behavior
               doNotPostBuildInstallCargoBinaries = true;
@@ -112,7 +109,6 @@
             }
           );
         };
-
         checks = {
           # Full workspace build (all crates)
           cargo-build = craneLib.buildPackage (

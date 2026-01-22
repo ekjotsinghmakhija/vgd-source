@@ -64,7 +64,7 @@
               nixpkgs-fmt.enable = true;
               ruff-format = {
                 enable = true;
-                excludes = [ "rust/exo_pyo3_bindings/exo_pyo3_bindings.pyi" ];
+                excludes = [ "rust/vgd_pyo3_bindings/vgd_pyo3_bindings.pyi" ];
               };
               rustfmt = {
                 enable = true;

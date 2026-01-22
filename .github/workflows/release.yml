@@ -13,7 +13,7 @@ jobs:
   # JOB 1: Build Python Wheel & Source Distribution (Runs on Linux)
   # ------------------------------------------------------------------
   build-python-artifacts:
-    name: Build Wheel (Linux)
+    name: Build Python Package (Linux)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -61,8 +61,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install System Dependencies
-        run: |
-          brew install macmon
+        # Only install macmon, we use native hdiutil for DMG now
+        run: brew install macmon
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -87,11 +87,10 @@ jobs:
           uv sync --group dev
           uv pip install pyinstaller
 
-      # CRITICAL STEP: Locate Entry Point & Generate Clean Spec
-      # This ensures we get a .app bundle (windowed) named "VGD"
+      # CRITICAL STEP: Robust Build Process
       - name: Generate Spec & Build App
         run: |
-          # 1. Find the main entry point (handles both 'exo' and 'vgd' folder names)
+          # 1. Find the main entry point dynamically
           if [ -f "src/vgd/main.py" ]; then
             ENTRY_POINT="src/vgd/main.py"
             echo "Found entry point at src/vgd/main.py"
@@ -103,16 +102,13 @@ jobs:
             exit 1
           fi
 
-          # 2. Generate a fresh spec file explicitly for a windowed macOS app
-          # --windowed: Creates .app bundle
-          # --name VGD: Forces the output name to be VGD.app
-          # --noconfirm: Overwrites existing spec
-          uv run pyi-makespec --name "VGD" --windowed --onedir --clean --noconfirm "$ENTRY_POINT"
+          # 2. Generate Spec (Removed invalid flags --clean --noconfirm)
+          uv run pyi-makespec --name "VGD" --windowed --onedir "$ENTRY_POINT"
 
-          # 3. Run PyInstaller
+          # 3. Run PyInstaller (Using correct flags here)
           uv run pyinstaller --clean --noconfirm VGD.spec
 
-          # 4. Verify Build
+          # 4. Verify Output
           if [ -d "dist/VGD.app" ]; then
             echo "✅ Build Successful: dist/VGD.app created."
           else
@@ -121,16 +117,17 @@ jobs:
             exit 1
           fi
 
-      - name: Package into DMG
+      # BULLETPROOF DMG CREATION: Use native hdiutil (No external tools/AppleScript)
+      - name: Create DMG using hdiutil
         run: |
-          # Create a clean folder for DMG contents
+          # 1. Prepare a staging folder
           mkdir -p dist/dmg_root
           cp -r "dist/VGD.app" dist/dmg_root/
 
-          # Create symlink to Applications
+          # 2. Create standard symlink to /Applications
           ln -s /Applications dist/dmg_root/Applications
 
-          # Use hdiutil (Native macOS tool, reliable)
+          # 3. Build DMG
           hdiutil create -volname "VGD Installer" \
             -srcfolder dist/dmg_root \
             -ov -format UDZO \

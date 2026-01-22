@@ -9,46 +9,95 @@ permissions:
   contents: write
 
 jobs:
-  build-and-release:
-    name: Build and Publish
+  # 1. Build Linux/Python Artifacts (Whl + Tar.gz)
+  build-python:
+    name: Build Python Package (Linux)
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 1. Setup Python & uv
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
 
-      - name: Set up Python
-        run: uv python install
+      - run: uv python install
 
-      # 2. Build the Dashboard (Frontend)
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Build Dashboard
-        run: |
+      # Build Dashboard so it is included in the python package
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: |
           cd dashboard
           npm ci
           npm run build
-          cd ..
 
-      # 3. Build the VGD Binary (Python Wheel)
-      - name: Build Wheel
-        run: uv build
+      # Build Wheel & Sdist
+      - run: uv build
 
-      # 4. Create Release (Directly on this repo)
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
+      # Upload to Release
+      - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: dist/*
-          generate_release_notes: true
+          draft: false
+          prerelease: false
+
+  # 2. Build macOS Application (.dmg)
+  build-macos:
+    name: Build macOS App
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Setup Python 3.12 (Standard for macOS builds)
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+
+      # Build Dashboard
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: |
+          cd dashboard
+          npm ci
+          npm run build
+
+      # Install Dependencies & PyInstaller
+      - run: |
+          uv sync --group dev
+          uv pip install pyinstaller
+
+      # Build the Standalone App
+      - name: Build App with PyInstaller
+        run: |
+          # Use uv run to ensure we use the virtual environment
+          uv run pyinstaller --clean --noconfirm packaging/pyinstaller/exo.spec
+
+          # Rename output to VGD
+          if [ -d "dist/Exo.app" ]; then
+            mv "dist/Exo.app" "dist/VGD.app"
+          fi
+
+      # Create DMG Installer
+      - name: Create DMG
+        run: |
+          brew install create-dmg
+
+          create-dmg \
+            --volname "VGD Installer" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --icon "VGD.app" 200 190 \
+            --hide-extension "VGD.app" \
+            --app-drop-link 600 185 \
+            "dist/VGD-${{ github.ref_name }}-macos-arm64.dmg" \
+            "dist/VGD.app"
+
+      # Upload DMG to Release
+      - uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dist/*.dmg
           draft: false
           prerelease: false

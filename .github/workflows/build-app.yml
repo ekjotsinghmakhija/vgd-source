@@ -1,7 +1,7 @@
 name: Release VGD macOS DMG
 
 # This workflow builds a standalone macOS DMG for VGD.
-# It does NOT require Apple Signing Certificates (results in an unsigned binary).
+# It includes the Dashboard and MacMon dependencies.
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-macos-dmg:
-    runs-on: macos-14 # Uses Apple Silicon (M1/M2) runner for native performance
+    runs-on: macos-14 # Uses Apple Silicon (M1/M2) runner
     permissions:
       contents: write
 
@@ -21,6 +21,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      # 1. Install System Dependencies (Required by vgd.spec)
+      - name: Install MacMon
+        run: brew install macmon
+
+      # 2. Install UV and Python
       - name: Install UV
         uses: astral-sh/setup-uv@v5
         with:
@@ -31,32 +36,38 @@ jobs:
           uv python install
           uv sync --locked
 
-      # Build the standalone executable folder using PyInstaller
+      # 3. Build Dashboard (Required by vgd.spec)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Dashboard
+        run: |
+          cd dashboard
+          npm ci
+          npm run build
+          cd ..
+
+      # 4. Build Binary (Now that dashboard/build exists)
       - name: Build VGD Binary
         run: uv run pyinstaller packaging/pyinstaller/vgd.spec
 
-      # Create the DMG file manually using hdiutil (Apple's disk utility)
+      # 5. Create DMG
       - name: Create DMG
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           DMG_NAME="VGD-${VERSION}.dmg"
 
-          # Prepare a folder for the DMG content
           mkdir -p dmg_root
-
-          # Copy the built binary folder into the DMG root
-          # Note: vgd.spec outputs to dist/vgd
           cp -r dist/vgd dmg_root/VGD
-
-          # Create a symlink to Applications for easy install (optional for CLI, but standard for DMGs)
           ln -s /Applications dmg_root/Applications
 
-          # Build the DMG
           hdiutil create -volname "VGD_Installer" -srcfolder dmg_root -ov -format UDZO "dist/$DMG_NAME"
 
           echo "DMG_NAME=$DMG_NAME" >> $GITHUB_ENV
 
-      # Upload the DMG to the GitHub Release
+      # 6. Upload to Release
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
